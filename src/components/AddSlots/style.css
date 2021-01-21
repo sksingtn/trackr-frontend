@@ -1,0 +1,392 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.editDeck {
+  --timingSpacing: 0.5em;
+  --facultySpacing: 0.6em;
+  width: 25em;
+  min-height: 40em;
+  border-radius: 10px;
+  padding: 1.5em;
+  box-shadow: 0 -15px 35px rgba(12, 31, 100, 0.2), 0 5px 15px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 37, 122, 1) 24%,
+    rgba(47, 124, 140, 1) 100%
+  );
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/*Main Title*/
+
+#editDeck__title {
+  width: 100%;
+  font-size: 1.2em;
+  margin-bottom: var(--timingSpacing);
+  padding: 0.5em 1em;
+  outline: none;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: 400;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+}
+
+#editDeck__title::placeholder {
+  color: var(--primary);
+}
+
+/*Timing Controls*/
+.editDeck__timingControls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+/*Weekday Select*/
+
+.editDeck__weekday {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: var(--timingSpacing);
+}
+
+.editDeck__weekday > select {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 0.4em 0.5em 0.4em 1em;
+  outline: none;
+  border-radius: 5px;
+  background: whitesmoke;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.editDeck__dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2.8em;
+  border-radius: 0px 5px 5px 0px;
+  background: var(--primary);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.editDeck__dropdown {
+  color: whitesmoke;
+}
+
+option {
+  background: var(--primary);
+  color: whitesmoke;
+  outline: none;
+}
+
+/*StartTime & EndTime*/
+
+.editDeck__time {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editDeck__time > div {
+  flex: 1;
+  display: flex;
+  box-shadow: var(--shadow);
+  border-radius: 5px;
+}
+
+.editDeck__time > div > input {
+  flex: 1;
+  border: none;
+  outline: none;
+
+  border-radius: 0px 5px 5px 0px;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+}
+
+.editDeck__time > div > input::placeholder {
+  color: var(--primary);
+}
+
+.editDeck__iconContainer {
+  background: var(--primary);
+  display: flex;
+  padding: 0.5em;
+  border-radius: 5px 0px 0px 5px;
+}
+
+.editDeck__iconContainer i {
+  font-size: 1.4em;
+  color: White;
+  justify-content: center;
+  align-items: center;
+}
+
+.spacing {
+  width: 1em;
+}
+
+/*Divider*/
+
+#divider {
+  width: 100%;
+  margin: 1em 0em;
+  height: 1px;
+  opacity: 0.5;
+  box-shadow: 0px 1px 5px 1px rgba(255, 255, 255, 0.4);
+}
+
+/*SearchBar For Faculties*/
+.editDeck__searchFaculty {
+  width: 100%;
+  margin-bottom: var(--facultySpacing);
+  display: flex;
+  align-items: stretch;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.editDeck__searchFaculty input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 0 1em;
+  padding-left: 1.5em;
+  color: var(--primary);
+  font-family: "Antic Slab", serif;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.editDeck__searchFaculty input::placeholder {
+  font-family: "Antic Slab", serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+button.editDeck__searchButton {
+  padding: 0.5em 1em;
+  font-size: 1.2em;
+  background: var(--primary);
+  color: whitesmoke;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-left: 2px solid whitesmoke;
+  border: 0 20 20 0;
+}
+
+/*Main Container For Faculty List*/
+.editDeck__items {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+/*Individual Cards for Faculty Section*/
+.editDeck__item {
+  width: 100%;
+  background: whitesmoke;
+  color: black;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  position: relative;
+  cursor: pointer;
+  padding: 0.4em 0.5em;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  user-select: none;
+}
+li:nth-last-child(1) .editDeck__item {
+  margin-bottom: 0;
+}
+
+.editDeck__item--checked {
+  background: var(--primary);
+  color: whitesmoke;
+}
+
+.editDeck__item--checked .editDeck__status {
+  color: whitesmoke;
+  border: 1px solid whitesmoke;
+}
+
+.editDeck__item:hover {
+  background: var(--primary);
+  color: whitesmoke;
+}
+
+/*Custom Radio Button*/
+.editDeck input[type="radio"] {
+  display: none;
+}
+
+.actualradio {
+  background: white;
+  width: 1.2em;
+  height: 1.2em;
+  border: 2px solid var(--primary);
+
+  background: whitesmoke;
+  box-sizing: border-box;
+}
+
+.actualradio::after {
+  content: "X";
+  font-family: sans-serif;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  background: var(--primary);
+  transform: scale(0);
+  transition: transform 0.15s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.editDeck input[type="radio"]:checked + .actualradio::after {
+  transform: scale(1);
+  color: whitesmoke;
+}
+
+.editDeck input[type="radio"]:checked + .actualradio {
+  outline: 1px solid whitesmoke;
+}
+
+/*Name&Image Section of item*/
+.editDeck__faculty {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 1.2em;
+}
+
+.editDeck__image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgb(116, 113, 113);
+  filter: drop-shadow(0 2px 4px rgba(9, 30, 80, 0.4));
+  margin: 0px 10px;
+}
+
+.editDeck__faculty > span {
+  font-weight: 400;
+}
+
+/*Status Tag Section*/
+.editDeck__status {
+  font-size: 0.6em;
+  font-weight: 200;
+  color: var(--primary);
+  border: 1px solid #44386b;
+  border-radius: 10px;
+  padding: 0.2em 0.4em;
+
+  position: absolute;
+  right: 10px;
+}
+
+.editDeck__item:hover .editDeck__status {
+  color: whitesmoke;
+  border: 1px solid whitesmoke;
+}
+
+/*Pagination Controls*/
+.editDeck__controls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.editDeck__controls button {
+  flex: 1;
+  margin-top: var(--facultySpacing);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 1.5em;
+  padding: 0.3em 0.6em;
+  outline: none;
+  border: none;
+  background: whitesmoke;
+
+  color: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 4px 15px 0 rgba(251, 251, 251, 0.2);
+}
+
+.editDeck__controls button:hover {
+  background: var(--primary);
+  color: whitesmoke;
+}
+
+#editDeck__previous {
+  border-right: 2px solid var(--primary);
+  border-radius: 20px 0px 0px 20px;
+}
+
+#editDeck__next {
+  border-right: none;
+  border-radius: 0px 20px 20px 0px;
+}
+
+/*Disabled Class for Pagination Controls*/
+.editDeck__button--disabled {
+  color: rgb(121, 120, 120) !important;
+  cursor: default !important;
+}
+
+.editDeck__button--disabled:hover {
+  background: white !important;
+}
+
+#save {
+  margin-top: 0.8em;
+  font-size: 1.2em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#save span {
+  margin-left: 0.5em;
+}
+
+#save i {
+  font-size: 1.2em;
+  color: var(--primary);
+}

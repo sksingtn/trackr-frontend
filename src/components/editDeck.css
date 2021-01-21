@@ -1,0 +1,86 @@
+/*.interface {
+  width: 100vw;
+  height: 100vh;
+  background: url("../assets/patterns/Waiau.svg") lightblue;
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.interface__body {
+  width: 70%;
+  height: 85%;
+  min-height: 800px;
+  min-width: 600px;
+  background: whitesmoke;
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.73);
+
+  display: grid;
+  grid-template-columns: 250px repeat(3, 1fr) 250px;
+  grid-template-rows: 5rem repeat(4, 1fr);
+}
+
+.sidebar {
+  grid-row: 1/6;
+  grid-column: 1/2;
+  background: #343f3e;
+
+  border-radius: 20px 0 0 20px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.sidebar__profile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar__profile > * {
+  margin-bottom: 20px;
+}
+
+.sidebar__image {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  background-image: contain;
+  filter: drop-shadow(2px 2px 2px #222);
+}
+
+.sidebar__position {
+  color: black;
+  font-size: 12px;
+  font-weight: 400;
+  background: #fff3f0;
+  padding: 2px 4px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+
+.sidebar__links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar__link {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.sidebar__link span {
+  color: white;
+  font-size: 24px;
+}
+.sidebar__link i {
+  color: white;
+}*/
