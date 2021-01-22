@@ -9,3 +9,353 @@
   box-sizing: border-box;
   font-family: "Antic Slab", serif;
 }
+
+.main {
+  width: 100vw;
+  min-height: 100vh;
+  background: url("assets/patterns/Waiau.svg") lightblue;
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main__body {
+  min-width: 105em;
+  height: 95%;
+  min-height: 850px;
+
+  background: whitesmoke;
+
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.73);
+
+  display: grid;
+  grid-template-columns: 16em repeat(3, 1fr) 25em;
+  grid-template-rows: 5rem repeat(4, 1fr);
+}
+
+/*sidebar*/
+
+.sidebar {
+  position: relative;
+  grid-row: 1/6;
+  grid-column: 1/2;
+  background: #343f3e;
+  background: #34386b;
+
+  border-radius: 20px 0 0 20px;
+  padding: 1.25em 0em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sidebar__logo {
+  color: rgb(235, 235, 235);
+  font-size: 2.3em;
+  font-family: "Fredoka One", cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0em 0.3em 0.2em 0.3em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid whitesmoke;
+}
+
+.sidebar__logo span {
+  font-family: inherit;
+  letter-spacing: 0.1em;
+  margin-left: 0.3em;
+}
+
+/*Profile Section*/
+
+.sidebar__profile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: whitesmoke;
+}
+
+.sidebar__profile > * {
+  margin-bottom: 0.2em;
+}
+
+.sidebar__profile img {
+  height: 5em;
+  width: 5em;
+  border-radius: 50%;
+  background-image: contain;
+
+  object-fit: contain;
+  border: 3px solid rgb(199, 198, 198);
+  box-sizing: border-box;
+  margin-bottom: 0.4em;
+}
+
+.sidebar__profileName {
+  font-size: 1.2em;
+  font-family: "Antic Slab", serif;
+}
+
+.sidebar__profilePosition {
+  display: block;
+  margin-top: 0.2em;
+  color: #34386b;
+  padding: 0.3em;
+  background: whitesmoke;
+  font-weight: 600;
+  border-radius: 5px;
+  text-transform: capitalize;
+}
+
+/*Sidebar Links*/
+
+.sidebar__links {
+  margin-top: 7em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar__link {
+  width: 100%;
+  font-size: 1.5em;
+  color: whitesmoke;
+  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  /*border-radius: 1em 0em 0em 1em;*/
+}
+
+.sidebar__linkText {
+  margin-left: 0.8em;
+}
+
+.sidebar__link:hover,
+.sidebar__link:nth-child(2) {
+  background: whitesmoke;
+  color: #34386b;
+}
+
+/*Logout*/
+
+#logout {
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  bottom: 1.5em;
+  color: var(--primary);
+  font-size: 1.1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#logout span {
+  margin-left: 0.4em;
+}
+
+/*Main Section*/
+
+.showdata {
+  grid-column: 2/5;
+  grid-row: 1/6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/*Select*/
+
+.showdata__batch {
+  display: flex;
+  margin: 0em 0em 2em 4em;
+  align-items: center;
+}
+
+.showdata__batch > * {
+  margin-right: 0.5em;
+}
+
+.showdata__batch > span {
+  color: gray;
+}
+
+.showdata__batch > i {
+  font-size: 2.2em;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.showdata__select {
+}
+
+/*Cards*/
+
+.showdata__cards {
+  display: flex;
+  margin-left: 4em;
+  margin-bottom: 4em;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.showdata__cards > div {
+  width: 11em;
+  margin-right: 1em;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  box-shadow: 0 -1em 2em rgba(12, 31, 100, 0.2), 0 0.3em 1em rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 37, 122, 1) 24%,
+    rgba(47, 124, 140, 1) 100%
+  );
+}
+
+.showdata__students span:nth-child(1),
+.showdata__classes span:nth-child(1) {
+  font-size: 1.25em;
+}
+
+.showdata__students span:nth-child(2),
+.showdata__classes span:nth-child(2) {
+  font-size: 2.5em;
+}
+
+.showdata__faculties > span {
+  margin-bottom: 0.3em;
+}
+
+.showdata__faculties span:nth-child(1) {
+  font-size: 1.25em;
+  align-self: flex-start;
+}
+
+.showdata__faculties span:nth-child(2) {
+  font-size: 0.8em;
+  color: rgb(180, 180, 180);
+  align-self: flex-start;
+}
+
+.progressBar {
+  width: 100%;
+  align-self: flex-start;
+  height: 1em;
+  border-radius: 2em;
+  background: rgba(211, 211, 211, 0.1);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: flex-start;
+
+  color: white;
+}
+
+.progressBar__content {
+  width: 32px;
+  height: 100%;
+  border-radius: 2em;
+  background: #3bca2b;
+  box-shadow: 0px 0px 15px 1px rgba(59, 202, 43, 0.5);
+  transition: all 0.1s ease;
+}
+
+/*SearchBar*/
+
+.showdata__search {
+  margin-left: 4em;
+
+  background: rgb(255, 254, 254);
+  width: 25em;
+
+  display: flex;
+  align-items: stretch;
+  border-radius: 1.2em;
+
+  box-shadow: var(--shadow);
+}
+
+.showdata__search input {
+  border-radius: 1.2em 0em 0em 1.2em;
+  background: transparent;
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 0 1em;
+  padding-left: 1.5em;
+  color: var(--primary);
+  font-family: "Antic Slab", serif;
+  font-size: 1.2em;
+  font-weight: 600;
+  border: 1px solid gray;
+}
+
+.showdata__search input::placeholder {
+  font-family: "Antic Slab", serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+.showdata__search input:focus {
+  border: 1px solid var(--primary);
+}
+
+button.showdata__searchButton {
+  padding: 0.5em 1em;
+  font-size: 1.2em;
+  background: var(--primary);
+
+  color: whitesmoke;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-left: 0.125em solid whitesmoke;
+  border-radius: 0em 1.2em 1.2em 0em;
+}
+
+/*Caraousel*/
+
+.weekdayContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 14px;
+  min-height: 36em;
+}
+
+.weekdayContainer > i {
+  font-size: 2.2em;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.weekdayContainer > i:hover {
+  transform: scale(1.1);
+}
+
+/*RightMost Section*/
+.right {
+  grid-row: 1/6;
+  grid-column: 5/6;
+  place-self: center;
+  font-size: 15px;
+}

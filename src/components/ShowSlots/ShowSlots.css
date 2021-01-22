@@ -1,9 +1,10 @@
 :root {
-  --borderColor: 20, 20, 20;
+  --borderColor: 52, 56, 107;
   --insideColor: #34386b;
 }
 
-.container {
+/*Needs Change Probably*/
+/*.container {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,10 +13,9 @@
   color: #303336;
 
   font-size: 16px;
-}
+}*/
 
 .weekday {
-  margin-top: 5em;
   display: grid;
   width: 20em;
   grid-template-rows: auto auto;
@@ -90,6 +90,8 @@
   font-size: 1.6em;
   margin-bottom: 0.2em;
   font-family: "Antic Slab", serif;
+  color: #185a12;
+  color: rgb(20, 20, 20);
 }
 
 .slot__person {
@@ -107,11 +109,14 @@
 .slot__end {
   font-size: 1.5em;
   color: #4d5256;
+  color: #185a12;
+  color: rgb(20, 20, 20);
 }
 
 #slot__icon {
   font-size: 1.2em;
   margin-right: 0.4em;
+  color: var(--primary);
 }
 
 .slot__timing {
@@ -125,6 +130,7 @@
   font-size: 1.2em;
   cursor: pointer;
   display: none;
+  color: red;
 }
 
 .slot:hover {
@@ -148,12 +154,13 @@
   padding: 0.2em 0.3em 0.2em 0;
 
   font-size: 1em;
-  background: whitesmoke;
+
   border: 1px solid #4d5256;
   font-family: "Antic Slab", serif;
   outline: none;
   cursor: pointer;
   background: #303336;
+  background: #34386b;
   color: white;
 }
 
