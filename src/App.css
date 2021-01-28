@@ -172,33 +172,111 @@
   grid-row: 1/6;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
-/*Select*/
+/*Batch header controls*/
 
 .showdata__batch {
+  margin-top: 1.5em;
   display: flex;
-  margin: 0em 0em 2em 4em;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+
+/*Batch select*/
+
+.showdata__batchControls {
+  display: flex;
+  margin-left: 4em;
   align-items: center;
 }
 
-.showdata__batch > * {
+.showdata__batchControls > * {
   margin-right: 0.5em;
 }
 
-.showdata__batch > span {
+.showdata__batchControls > span {
   color: gray;
 }
 
-.showdata__batch > i {
+.showdata__batchControls > i {
   font-size: 2.2em;
   color: var(--primary);
   cursor: pointer;
 }
 
-.showdata__select {
+/*Toggle Switch*/
+
+.showdata__batchToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4em;
+}
+
+.showdata__batchToggle > span {
+  font-weight: 400;
+  color: #252850;
+  font-size: 1.2em;
+}
+
+.toggle {
+  width: 3.8em;
+  height: 1.8em;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5) inset;
+  border-radius: 1.2em;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.toggle::before {
+  display: block;
+  content: "";
+  position: absolute;
+  height: 1.6em;
+  left: 0%;
+  width: 1.6em;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.toggle::after {
+  right: 12%;
+  content: "OFF";
+  position: absolute;
+  font-size: 0.8em;
+  color: rgba(0, 0, 0, 0.7);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.activeToggle input {
+  display: none;
+}
+
+.activeToggle input:checked + .toggle {
+  background: rgb(1, 211, 86);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3) inset;
+}
+
+.activeToggle input:checked + .toggle::before {
+  left: unset;
+  top: 2%;
+  right: 2%;
+}
+
+.activeToggle input:checked + .toggle::after {
+  content: "ON";
+  right: unset;
+  left: 10%;
+  color: whitesmoke;
+  font-size: 1em;
 }
 
 /*Cards*/
@@ -281,7 +359,7 @@
 
 .showdata__search {
   margin-left: 4em;
-
+  margin-bottom: 1em;
   background: rgb(255, 254, 254);
   width: 25em;
 
@@ -337,15 +415,16 @@ button.showdata__searchButton {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   font-size: 14px;
-  min-height: 36em;
 }
 
 .weekdayContainer > i {
   font-size: 2.2em;
   cursor: pointer;
   transition: transform 0.1s ease;
+  align-self: center;
+  color: var(--primary);
 }
 
 .weekdayContainer > i:hover {

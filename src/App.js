@@ -69,23 +69,35 @@ function App() {
 
         <section className="showdata">
           <div className="showdata__batch">
-            <Autocomplete
-              id="combo-box-demo"
-              className="showdata__select"
-              options={top100Films}
-              getOptionLabel={(option) => option.title}
-              style={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select a Batch"
-                  variant="outlined"
-                />
-              )}
-            />
-            <span>OR</span>
-            <i class="fas fa-plus-square"></i>
+            <div className="showdata__batchControls">
+              <Autocomplete
+                id="combo-box-demo"
+                className="showdata__select"
+                options={top100Films}
+                getOptionLabel={(option) => option.title}
+                style={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select a Batch"
+                    variant="outlined"
+                  />
+                )}
+              />
+              <span>OR</span>
+              <i class="fas fa-plus-square"></i>
+            </div>
+
+            <div className="showdata__batchToggle">
+              <span>STATUS </span>
+              <span>&nbsp;:&nbsp;&nbsp;</span>
+              <label className="activeToggle" htmlFor="toggle">
+                <input type="checkbox" name="" id="toggle" />
+                <div className="toggle"></div>
+              </label>
+            </div>
           </div>
+
           <div className="showdata__cards">
             <div className="showdata__students">
               <span>Total Students</span>

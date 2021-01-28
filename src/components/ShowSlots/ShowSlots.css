@@ -16,6 +16,7 @@
 }*/
 
 .weekday {
+  margin-top: 0.5em;
   display: grid;
   width: 20em;
   grid-template-rows: auto auto;
@@ -45,24 +46,45 @@
   display: flex;
 
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   background: rgba(0, 0, 0, 0.05);
 
   box-sizing: border-box;
   border: 2px solid rgba(var(--borderColor), 0.3);
   border-top: none;
   border-radius: 0px 0px 15px 15px;
-
-  max-height: 35em;
+  /*Some offset for padding*/
+  max-height: 31.6em;
   overflow-y: auto;
 }
+
+/**/
+#style-1::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+#style-1::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+#style-1::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgb(155, 152, 152);
+  visibility: hidden;
+}
+
+#style-1:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+/**/
 
 .weekday__slots > div {
   margin-bottom: 0.8em;
 }
 
 .weekday_slotContainer {
-  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -72,25 +94,33 @@
   font-family: "Fredoka One", cursive;
   align-self: start;
   margin-top: 1em;
+  padding: 0em 0.6em;
   color: rgb(var(--borderColor));
+}
+
+/*Individual*/
+
+.slotActivator {
+  display: none;
 }
 
 .slot {
   position: relative;
   border-radius: 10px;
-  padding: 1.2em 0.8em;
+  padding: 0.4em 0.8em 0.8em 0.8em;
   box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
 
-  transition: all 0.1s ease;
+  transition: padding 0.2s ease-out;
   background: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  user-select: none;
 }
 
 .slot__title {
   display: inline-block;
   font-size: 1.6em;
-  margin-bottom: 0.2em;
+  margin-bottom: 0.1em;
   font-family: "Antic Slab", serif;
-  color: #185a12;
   color: rgb(20, 20, 20);
 }
 
@@ -123,6 +153,45 @@
   font-family: "Antic Slab", serif;
 }
 
+.slot:hover {
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px #b6244f;
+}
+
+.slotActivator:checked + .slot {
+  /*box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);*/
+  padding-top: 2.3em;
+
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px #b6244f;
+}
+
+/*On Slot Click - Remove Items*/
+
+.slot__meta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.2em;
+}
+
+.slot__duration {
+  color: white;
+  padding: 0em 0.3em;
+  background: #b6244f;
+  border-radius: 0.25em;
+}
+
+.slot__lastActivity {
+  color: #737b82;
+  font-size: 0.8em;
+}
+
+.slotActivator:checked + .slot .slot__meta {
+  display: none;
+}
+
+/*On Slot Hover - Add Items*/
+
 #slot__delete {
   position: absolute;
   top: 0.5em;
@@ -131,16 +200,10 @@
   cursor: pointer;
   display: none;
   color: red;
-}
-
-.slot:hover {
-  /*transform:scale(1) translateY(-2px);*/
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);
-  padding-top: 2.5em;
-}
-
-.slot:hover #slot__delete {
-  display: block;
+  pointer-events: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
 }
 
 .slot__edit {
@@ -173,18 +236,10 @@
   margin: 0 0.4em;
 }
 
-.slot:hover .slot__edit {
+.slotActivator:checked + .slot #slot__delete {
+  display: block;
+}
+
+.slotActivator:checked + .slot .slot__edit {
   display: flex;
 }
-
-/*#slot__icon {
-  color: var(--insideColor);
-}
-
-.slot__edit {
-  background: var(--insideColor);
-}
-
-#slot__delete {
-  color: var(--insideColor);
-}*/
