@@ -109,6 +109,7 @@ function AddSlots() {
                 />
                 <div className="actualradio"></div>
 
+                <span className="editDeck__index">{index + 1}.</span>
                 <div className="editDeck__faculty">
                   <img className="editDeck__image" src={img} alt="" />
                   <span>{name}</span>
@@ -137,6 +138,8 @@ function AddSlots() {
           <i class="fas fa-forward"></i>
         </button>
       </div>
+
+      <hr id="divider" />
 
       <Button id="save" variant="contained">
         <i class="fas fa-plus-square"></i>

@@ -112,7 +112,7 @@ option {
 .editDeck__time > div {
   width: 10.3em;
   display: flex;
-  box-shadow: var(--shadow);
+  box-shadow: 0 3px 5px 0 rgba(200, 204, 218, 0.2);
   border-radius: 0.3em;
 }
 
@@ -211,12 +211,12 @@ button.editDeck__searchButton {
 .editDeck__item {
   width: 100%;
   background: whitesmoke;
-  color: black;
+  color: #232547;
   font-size: 1.2em;
   margin-bottom: 0.3em;
   position: relative;
   cursor: pointer;
-  padding: 0.4em 0.5em;
+  padding: 0.3em 0.5em;
   width: 100%;
   display: flex;
   align-items: center;
@@ -233,8 +233,9 @@ li:nth-last-child(1) .editDeck__item {
 }
 
 .editDeck__item--checked .editDeck__status {
-  color: whitesmoke;
-  border: 1px solid whitesmoke;
+  border: 1px solid transparent;
+
+  background: whitesmoke;
 }
 
 .editDeck__item:hover {
@@ -280,12 +281,24 @@ li:nth-last-child(1) .editDeck__item {
   outline: 1px solid whitesmoke;
 }
 
+/*Serial Number*/
+
+.editDeck__index {
+  margin-left: 1em;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.editDeck__item:hover .editDeck__index,
+.editDeck input[type="radio"]:checked + div + .editDeck__index {
+  color: rgb(245, 244, 244);
+}
+
 /*Name&Image Section of item*/
 .editDeck__faculty {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 1.2em;
 }
 
 .editDeck__image {
@@ -293,7 +306,7 @@ li:nth-last-child(1) .editDeck__item {
   height: 2.5em;
   object-fit: cover;
   border-radius: 50%;
-  border: 1px solid rgb(116, 113, 113);
+  border: 2px solid rgb(221, 219, 219);
   filter: drop-shadow(0 0.125em 0.25em rgba(9, 30, 80, 0.4));
   margin: 0px 0.625em;
 }
@@ -309,6 +322,7 @@ li:nth-last-child(1) .editDeck__item {
   color: var(--primary);
   color: #28901f;
   border: 1px solid #28901f;
+  box-shadow: 0 0 1px transparent;
   border-radius: 10px;
   padding: 0.2em 0.4em;
 
@@ -317,8 +331,9 @@ li:nth-last-child(1) .editDeck__item {
 }
 
 .editDeck__item:hover .editDeck__status {
-  color: whitesmoke;
-  border: 1px solid whitesmoke;
+  background: whitesmoke;
+  border: 1px solid transparent;
+  font-weight: 400;
 }
 
 .editDeck__status--failed {
@@ -376,7 +391,7 @@ li:nth-last-child(1) .editDeck__item {
 }
 
 #save {
-  margin-top: 0.8em;
+  margin-top: 0em;
   font-size: 1.2em;
   width: 100%;
   display: flex;
