@@ -116,9 +116,9 @@ function App() {
 
           <div className="weekdayContainer">
             <i class="fas fa-chevron-left"></i>
-            <ShowSlots />
-            <ShowSlots />
-            <ShowSlots />
+            <ShowSlots day="MONDAY" />
+            <ShowSlots day="TUESDAY" />
+            <ShowSlots day="WEDNESDAY" />
             <i class="fas fa-chevron-right"></i>
           </div>
         </section>

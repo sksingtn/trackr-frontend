@@ -1,11 +1,11 @@
 import React from "react";
 import "./ShowSlots.css";
 
-function ShowSlots() {
+function ShowSlots({ day }) {
   return (
     <section class="weekday">
       <div class="weekday__title">
-        <span>MONDAY </span>
+        <span>{day}</span>
       </div>
       <div class="weekday__slots">
         <div class="weekday_slotContainer">
