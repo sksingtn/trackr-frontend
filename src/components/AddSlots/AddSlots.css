@@ -8,11 +8,11 @@
 
 .editDeck {
   --timingSpacing: 0.5em;
-  --facultySpacing: 0.6em;
+  --facultySpacing: 0.5em;
   width: 25em;
-  min-height: 40em;
+  /*min-height: 40em;*/
   border-radius: 0.62em;
-  padding: 1.5em;
+  padding: 1em 1.5em 1.2em 1.5em;
   box-shadow: 0 -1em 2em rgba(12, 31, 100, 0.2), 0 0.3em 1em rgba(0, 0, 0, 0.3);
   background: linear-gradient(
     90deg,
@@ -24,8 +24,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+
+  transition: all 0.5s ease;
+}
+/*Status Bar*/
+.editDeck__statusBar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.editDeck__statusText {
+  color: whitesmoke;
+  font-weight: 600;
+  font-size: 1.2em;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.2em;
+  word-spacing: 0.3em;
+
+  font-weight: 400;
+  font-family: "Fredoka One", cursive !important;
+}
 /*Main Title*/
 
 #editDeck__title {
@@ -34,15 +54,19 @@
   margin-bottom: var(--timingSpacing);
   padding: 0.5em 1em;
   outline: none;
-  border: 1px solid var(--primary);
-  color: var(--primary);
-  font-weight: 400;
+  border: 1px solid grey;
   border-radius: 0.3em;
   box-shadow: var(--shadow);
+
+  color: var(--primary);
+}
+
+#editDeck__title:focus {
+  box-shadow: 0px 0px 0px 2px var(--primary);
 }
 
 #editDeck__title::placeholder {
-  color: var(--primary);
+  color: rgb(93, 92, 92);
 }
 
 /*Timing Controls*/
@@ -69,8 +93,9 @@
   outline: none;
   border-radius: 0.3em;
   background: whitesmoke;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  color: rgb(93, 92, 92);
+
+  border: 1px solid grey;
   box-shadow: var(--shadow);
   cursor: pointer;
 }
@@ -127,8 +152,13 @@ option {
   text-align: center;
 }
 
+.editDeck__time > div > input:focus {
+  box-shadow: 0px 0px 0px 2px var(--primary);
+}
+
 .editDeck__time > div > input::placeholder {
   color: var(--primary);
+  color: rgba(116, 116, 116, 1);
 }
 
 .editDeck__iconContainer {
@@ -149,10 +179,47 @@ option {
 
 #divider {
   width: 100%;
-  margin: 1em 0em;
+  margin: 0.8em 0em;
   height: 1px;
   opacity: 0.5;
   box-shadow: 0px 1px 0.3em 1px rgba(255, 255, 255, 0.4);
+}
+
+/*Tabs*/
+
+.editDeck__tabs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.editDeck__tabs > button {
+  font-weight: 400;
+  display: flex;
+  flex: 1;
+  height: 2.7em;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em 0em;
+  font-size: 1.2em;
+  color: var(--primary);
+}
+
+.editDeck__tab--active {
+  border-bottom: 0.16em solid #b6244f !important;
+}
+
+.editDeck__tab i {
+  /*Material UI generated few elements so cant use > i*/
+  margin-right: 0.5em;
+}
+
+/*SearchFaculties Container*/
+
+section.selectFaculties {
+  margin-top: 0.6em;
+  width: 100%;
 }
 
 /*SearchBar For Faculties*/
@@ -197,6 +264,10 @@ button.editDeck__searchButton {
   border: 0 20 20 0;
 }
 
+button.editDeck__searchButton:hover {
+  background: #4d529e;
+}
+
 /*Main Container For Faculty List*/
 .editDeck__items {
   width: 100%;
@@ -212,7 +283,7 @@ button.editDeck__searchButton {
   width: 100%;
   background: whitesmoke;
   color: #232547;
-  font-size: 1.2em;
+  font-size: 1.16em;
   margin-bottom: 0.3em;
   position: relative;
   cursor: pointer;
@@ -249,11 +320,9 @@ li:nth-last-child(1) .editDeck__item {
 }
 
 .actualradio {
-  background: white;
   width: 1.2em;
   height: 1.2em;
   border: 2px solid var(--primary);
-
   background: whitesmoke;
   box-sizing: border-box;
 }
@@ -264,21 +333,20 @@ li:nth-last-child(1) .editDeck__item {
   width: 100%;
   height: 100%;
   display: inline-block;
-  background: var(--primary);
   transform: scale(0);
   transition: transform 0.15s ease;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: var(--primary);
 }
 
 .editDeck input[type="radio"]:checked + .actualradio::after {
   transform: scale(1);
-  color: whitesmoke;
 }
 
 .editDeck input[type="radio"]:checked + .actualradio {
-  outline: 1px solid whitesmoke;
+  border: none;
 }
 
 /*Serial Number*/
@@ -346,11 +414,11 @@ li:nth-last-child(1) .editDeck__item {
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-top: var(--facultySpacing);
 }
 
 .editDeck__controls button {
   flex: 1;
-  margin-top: var(--facultySpacing);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -388,6 +456,36 @@ li:nth-last-child(1) .editDeck__item {
 
 .editDeck__button--disabled:hover {
   background: white !important;
+}
+
+/*Invite Section*/
+section.addFaculties {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: whitesmoke;
+  padding: 2em 0em 1em 0em;
+}
+
+section.addFaculties > * {
+  margin-bottom: 0.8em;
+}
+
+.addFaculties__note {
+  color: #737b82;
+  font-size: 0.8em;
+}
+
+#addFacultyButton {
+  margin-bottom: 0;
+  margin-top: 0.6em;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 12em;
+  background: #b6244f;
 }
 
 #save {

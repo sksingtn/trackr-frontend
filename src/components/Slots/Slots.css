@@ -3,17 +3,83 @@
   --insideColor: #34386b;
 }
 
-/*Needs Change Probably*/
-/*.container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  color: #303336;
+/*SearchBar*/
 
-  font-size: 16px;
-}*/
+.showdata__search {
+  margin-left: 4em;
+  margin-bottom: 1em;
+  background: rgb(255, 254, 254);
+  width: 25em;
+
+  display: flex;
+  align-items: stretch;
+  border-radius: 1.2em;
+
+  box-shadow: var(--shadow);
+}
+
+.showdata__search input {
+  border-radius: 1.2em 0em 0em 1.2em;
+  background: transparent;
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 0 1em;
+  padding-left: 1.5em;
+  color: var(--primary);
+  font-family: "Antic Slab", serif;
+  font-size: 1.2em;
+  font-weight: 600;
+  border: 1px solid gray;
+}
+
+.showdata__search input::placeholder {
+  font-family: "Antic Slab", serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+.showdata__search input:focus {
+  border: 1px solid var(--primary);
+}
+
+button.showdata__searchButton {
+  padding: 0.5em 1em;
+  font-size: 1.2em;
+  background: var(--primary);
+
+  color: whitesmoke;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-left: 0.125em solid whitesmoke;
+  border-radius: 0em 1.2em 1.2em 0em;
+}
+
+/*Caraousel*/
+
+.weekdayContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  font-size: 14px;
+}
+
+.weekdayContainer > i {
+  font-size: 2.2em;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  align-self: center;
+  color: var(--primary);
+}
+
+.weekdayContainer > i:hover {
+  transform: scale(1.1);
+}
+
+/*Individual Slots*/
 
 .weekday {
   margin-top: 0.5em;
@@ -30,15 +96,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.8em;
+
   padding: 0.2em 0.2em;
 
-  font-family: "Fredoka One", cursive !important;
   letter-spacing: 0.15em;
 }
 
-.weekday__title span {
-  font-family: inherit;
+.weekday__title span:nth-child(1) {
+  font-family: "Fredoka One", cursive !important;
+  font-size: 1.8em;
+  padding: 0.2em 0em;
+  flex: 5;
+  text-align: center;
+}
+
+.weekday__classCount {
+  flex: 2;
+  color: whitesmoke;
+  padding: 0.2em 0.2em;
 }
 
 .weekday__slots {
@@ -158,7 +233,6 @@
 }
 
 .slotActivator:checked + .slot {
-  /*box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);*/
   padding-top: 2.3em;
 
   box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px #b6244f;

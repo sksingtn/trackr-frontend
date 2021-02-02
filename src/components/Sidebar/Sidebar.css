@@ -1,0 +1,126 @@
+/*sidebar*/
+.sidebar {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 20px 0 0 20px;
+  background: #34386b;
+  padding: 1.25em 0em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sidebar__logo {
+  color: rgb(235, 235, 235);
+  font-size: 2.3em;
+  font-family: "Fredoka One", cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0em 0.3em 0.2em 0.3em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid whitesmoke;
+}
+
+.sidebar__logo span {
+  font-family: inherit;
+  letter-spacing: 0.1em;
+  margin-left: 0.3em;
+}
+
+/*Profile Section*/
+
+.sidebar__profile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: whitesmoke;
+}
+
+.sidebar__profile > * {
+  margin-bottom: 0.2em;
+}
+
+.sidebar__profile img {
+  height: 5em;
+  width: 5em;
+  border-radius: 50%;
+  background-image: contain;
+
+  object-fit: contain;
+  border: 3px solid rgb(199, 198, 198);
+  box-sizing: border-box;
+  margin-bottom: 0.4em;
+}
+
+.sidebar__profileName {
+  font-size: 1.2em;
+  font-family: "Antic Slab", serif;
+}
+
+.sidebar__profilePosition {
+  display: block;
+  margin-top: 0.2em;
+  color: #34386b;
+  padding: 0.3em;
+  background: whitesmoke;
+  font-weight: 600;
+  border-radius: 5px;
+  text-transform: capitalize;
+}
+
+/*Sidebar Links*/
+
+.sidebar__links {
+  margin-top: 7em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar__link {
+  width: 100%;
+  font-size: 1.5em;
+  color: whitesmoke;
+  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  /*border-radius: 1em 0em 0em 1em;*/
+}
+
+.sidebar__linkText {
+  margin-left: 0.8em;
+}
+
+.sidebar__link:hover,
+.sidebar__link:nth-child(2) {
+  background: whitesmoke;
+  color: #34386b;
+}
+
+/*Logout*/
+
+#logout {
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  bottom: 1.5em;
+  color: var(--primary);
+  font-size: 1.1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#logout span {
+  margin-left: 0.4em;
+}
