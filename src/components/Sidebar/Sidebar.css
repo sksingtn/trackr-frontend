@@ -52,7 +52,7 @@
   background-image: contain;
 
   object-fit: contain;
-  border: 3px solid rgb(199, 198, 198);
+  border: 3px solid rgb(255, 253, 253);
   box-sizing: border-box;
   margin-bottom: 0.4em;
 }

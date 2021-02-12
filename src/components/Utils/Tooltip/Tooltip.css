@@ -1,0 +1,31 @@
+.tooltip{
+  position:relative;
+  cursor:pointer;
+  transition: transform 0.3s ease;
+}
+
+.tooltip:hover::after{
+  display:block;
+  bottom:100%;
+  
+}
+
+.tooltip::after{
+  display:none;
+  content:attr(tooltip);
+  position:absolute;
+  left:0%;
+  bottom:0%;
+  width:max-content; 
+  color:rgb(240, 238, 238);
+  background:var(--primary);
+
+  padding:0.2em 0.4em;
+  border-radius:0.3em;
+  font-family: "Antic Slab", serif;
+  letter-spacing:initial;
+  font-size: 14px;
+  transition: bottom 1s ease;
+
+  
+}
