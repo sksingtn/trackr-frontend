@@ -8,7 +8,7 @@ function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
-        <i class="fas fa-calendar-week" id="logo"></i>
+        <i className="fas fa-calendar-week" id="logo"></i>
         <span className="sidebar__name">Trackr</span>
       </div>
 
@@ -22,25 +22,25 @@ function Sidebar() {
 
       <div className="sidebar__links">
         <label className="sidebar__link">
-          <i class="fas fa-chart-area"></i>
+          <i className="fas fa-chart-area"></i>
           <span className="sidebar__linkText">Dashboard</span>
         </label>
         <label className="sidebar__link">
-          <i class="fas fa-user-graduate"></i>
+          <i className="fas fa-user-graduate"></i>
           <span className="sidebar__linkText">Batch</span>
         </label>
         <label className="sidebar__link">
-          <i class="fas fa-question-circle"></i>
+          <i className="fas fa-question-circle"></i>
           <span className="sidebar__linkText">Help</span>
         </label>
         <label className="sidebar__link">
-          <i class="fas fa-cog"></i>
+          <i className="fas fa-cog"></i>
           <span className="sidebar__linkText">Settings</span>
         </label>
       </div>
 
       <Button id="logout" variant="contained">
-        <i class="fas fa-sign-out-alt"></i>
+        <i className="fas fa-sign-out-alt"></i>
         <span>LOGOUT</span>
       </Button>
     </div>

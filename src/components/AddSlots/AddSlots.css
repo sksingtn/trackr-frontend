@@ -1,10 +1,4 @@
-/*.container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}*/
+
 
 .editDeck {
   --timingSpacing: 0.5em;
@@ -57,7 +51,7 @@
   border: 1px solid grey;
   border-radius: 0.3em;
   box-shadow: var(--shadow);
-
+  font-weight: 600;
   color: var(--primary);
 }
 
@@ -67,6 +61,7 @@
 
 #editDeck__title::placeholder {
   color: rgb(93, 92, 92);
+  font-weight: 400;
 }
 
 /*Timing Controls*/
@@ -93,11 +88,13 @@
   outline: none;
   border-radius: 0.3em;
   background: whitesmoke;
-  color: rgb(93, 92, 92);
+  color: var(--primary);
 
   border: 1px solid grey;
   box-shadow: var(--shadow);
   cursor: pointer;
+
+  font-weight: 600;
 }
 
 .editDeck__dropdown {
@@ -158,7 +155,7 @@ option {
 
 .editDeck__time > div > input::placeholder {
   color: var(--primary);
-  color: rgba(116, 116, 116, 1);
+  color: rgb(148, 148, 148);
 }
 
 .editDeck__iconContainer {
@@ -268,6 +265,25 @@ button.editDeck__searchButton:hover {
   background: #4d529e;
 }
 
+.editDeck__searchClearButton{
+  padding-right: 0.5em;
+  background: whitesmoke;
+  color:var(--primary);
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/*faculty 404 */
+
+.editDeck_facultyEmpty{
+  display: block;
+  color: whitesmoke;
+  text-align: center;
+  padding: 0.5em 0em;
+  font-size: 1.2em;
+}
+
 /*Main Container For Faculty List*/
 .editDeck__items {
   width: 100%;
@@ -278,13 +294,20 @@ button.editDeck__searchButton:hover {
   list-style: none;
 }
 
+/*For skeleton loaders*/
+.editDeck__items > li{
+  background: whitesmoke;
+  margin-bottom: 0.3em;
+}
+
+
 /*Individual Cards for Faculty Section*/
 .editDeck__item {
   width: 100%;
   background: whitesmoke;
   color: #232547;
   font-size: 1.16em;
-  margin-bottom: 0.3em;
+  
   position: relative;
   cursor: pointer;
   padding: 0.3em 0.5em;
@@ -452,10 +475,17 @@ li:nth-last-child(1) .editDeck__item {
 .editDeck__button--disabled {
   color: rgb(121, 120, 120) !important;
   cursor: default !important;
+  pointer-events: none ;
 }
 
 .editDeck__button--disabled:hover {
   background: white !important;
+}
+
+/**/
+
+#skeleton{
+  margin-left: 1.5em !important;
 }
 
 /*Invite Section*/
