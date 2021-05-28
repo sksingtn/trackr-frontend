@@ -8,6 +8,7 @@ const CheckBoxContainer = styled.label`
   border: 3px solid #f50057;
   border-radius: 4px;
   background: white;
+  pointer-events: none;
 
   & > input {
     display: none;
