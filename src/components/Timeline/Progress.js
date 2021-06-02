@@ -11,6 +11,7 @@ const ProgressBar = styled.div`
   justify-content: flex-start;
   color: white;
   position: relative;
+  overflow: ${(props) => (props.percentage < 10 ? "hidden" : "visible")};
 
   &::after {
     content: "";
@@ -18,7 +19,7 @@ const ProgressBar = styled.div`
     top: 0;
     left: 0;
     height: 100%;
-    width: 50%;
+    width: ${(props) => `${props.percentage || 0}%`};
     border-radius: 2em;
     background: #3bca2b;
     box-shadow: 0px 0px 15px 1px rgba(59, 202, 43, 0.5);

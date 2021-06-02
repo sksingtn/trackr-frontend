@@ -1,3 +1,4 @@
+import { Skeleton } from "@material-ui/lab";
 import React from "react";
 import styled from "styled-components";
 
@@ -29,8 +30,11 @@ const TimeCardContainer = styled.div`
       color: rgba(31, 31, 31, 0.6);
     }
 
-    & .time {
+    & .middle {
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 
@@ -43,18 +47,45 @@ const TimeCardContainer = styled.div`
     color: white;
     font-weight: 600;
     letter-spacing: 0.05em;
+
+    /*Same height if text is absent*/
+    box-sizing: content-box;
+    min-height: 1.2em;
   }
 `;
 
-function TimeCard({ className, primary, secondary, footer, children, color }) {
+function TimeCard({
+  className,
+  primary,
+  secondary,
+  footer,
+  children,
+  color,
+  loading,
+}) {
   return (
     <TimeCardContainer className={className} color={color}>
       <div className="content">
-        <span className="primary">{primary}</span>
-        <span className="secondary">{secondary}</span>
-        <div className="time">{children}</div>
+        <span className="primary">
+          {loading ? <Skeleton animation="wave" /> : primary}
+        </span>
+
+        <span className="secondary">
+          {loading ? <Skeleton animation="wave" /> : secondary}
+        </span>
+
+        <div className="middle">
+          {loading ? (
+            <Skeleton
+              animation="wave"
+              style={{ width: "90%", height: "90%" }}
+            />
+          ) : (
+            children
+          )}
+        </div>
       </div>
-      <span className="footer">{footer}</span>
+      <span className="footer">{!loading && footer}</span>
     </TimeCardContainer>
   );
 }
