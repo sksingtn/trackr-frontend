@@ -1,31 +1,61 @@
 import React from "react";
-import "./Stats.css";
+import styled from "styled-components";
 
-function Stats({info}) {
+const StatsCardContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+`;
 
-  const {totalStudents,totalClasses,totalFaculties,verifiedFaculties} = info;
+const StatsCard = styled.div`
+  width: 11em;
+  margin-right: 1em;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 
-  
+  box-shadow: 0 -1em 2em rgba(12, 31, 100, 0.2), 0 0.3em 1em rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.3);
+
+  background: linear-gradient(
+    90deg,
+    rgba(37, 37, 122, 1) 24%,
+    rgba(47, 124, 140, 1) 100%
+  );
+
+  background: rgb(182, 36, 79);
+
+  & > span:nth-child(1) {
+    font-size: 1.25em;
+  }
+
+  & > span:nth-child(2) {
+    font-size: 2.5em;
+  }
+`;
+
+function Stats({ info, className }) {
+  const { totalStudents, totalClasses, totalFaculties } = info;
+
   return (
-    <div className="showdata__cards">
-      <div className="showdata__students">
+    <StatsCardContainer className={className}>
+      <StatsCard>
         <span>Total Students</span>
-        <span>{totalStudents}</span>
-      </div>
+        <span>{totalStudents || 0}</span>
+      </StatsCard>
 
-      <div className="showdata__faculties">
+      <StatsCard>
         <span>Total Faculties</span>
-        <span>{verifiedFaculties}/{totalFaculties} Verified</span>
-        <div className="progressBar">
-          <div className="progressBar__content" style={{width:`${Math.round(verifiedFaculties/totalFaculties*100)}%`}}></div>
-        </div>
-      </div>
-
-      <div className="showdata__classes">
+        <span>{totalFaculties || 0}</span>
+      </StatsCard>
+      <StatsCard>
         <span>Total classes</span>
-        <span>{totalClasses}</span>
-      </div>
-    </div>
+        <span>{totalClasses || 0}</span>
+      </StatsCard>
+    </StatsCardContainer>
   );
 }
 

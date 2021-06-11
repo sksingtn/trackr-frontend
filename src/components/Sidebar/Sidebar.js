@@ -3,6 +3,7 @@ import "./Sidebar.css";
 
 import Button from "@material-ui/core/Button";
 import ProfileImage from "../../assets/profileImage.png";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
   return (
@@ -21,18 +22,20 @@ function Sidebar() {
       </div>
 
       <div className="sidebar__links">
-        <label className="sidebar__link">
+        <Link to="/dashboard" className="sidebar__link">
           <i className="fas fa-chart-area"></i>
           <span className="sidebar__linkText">Dashboard</span>
-        </label>
-        <label className="sidebar__link">
+        </Link>
+
+        <Link to="/manage" className="sidebar__link">
           <i className="fas fa-user-graduate"></i>
           <span className="sidebar__linkText">Batch</span>
-        </label>
-        <label className="sidebar__link">
+        </Link>
+
+        <Link to="/activity" className="sidebar__link">
           <i className="fas fa-question-circle"></i>
           <span className="sidebar__linkText">Help</span>
-        </label>
+        </Link>
         <label className="sidebar__link">
           <i className="fas fa-cog"></i>
           <span className="sidebar__linkText">Settings</span>

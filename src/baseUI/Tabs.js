@@ -1,20 +1,11 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import BookIcon from "@material-ui/icons/Book";
 
-const SwitchContainer = styled.div`
+const TabWrapper = styled.div`
+  flex: 1;
   display: flex;
-
-  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 10%),
-    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
-  border-radius: 5px;
-  overflow: hidden;
-`;
-
-const Tab = styled.div`
-  display: flex;
+  justify-content: center;
   align-items: center;
-  font-size: 1.2em;
   padding: 0.5em 1em 0.5em 1em;
   background: rgb(226, 230, 238);
   color: var(--primary);
@@ -58,25 +49,25 @@ const Tab = styled.div`
       `}
   }
 
-  & > span {
+  & > .text {
     margin-right: 0.2em;
   }
 `;
 
-function NotificationSwitch({ section, setSection }) {
-  const [checked, setChecked] = React.useState(0);
+export function Tab({ text, icon, checked, className, onClick }) {
   return (
-    <SwitchContainer>
-      <Tab checked={section === 0} onClick={() => setSection(0)}>
-        <span>Activity</span>
-        <BookIcon />
-      </Tab>
-      <Tab checked={section === 1} onClick={() => setSection(1)}>
-        <span>Broadcast</span>
-        <i class="fas fa-bullhorn"></i>
-      </Tab>
-    </SwitchContainer>
+    <TabWrapper checked={checked} className={className} onClick={onClick}>
+      <span className="text">{text}</span>
+      {icon}
+    </TabWrapper>
   );
 }
 
-export default NotificationSwitch;
+export const Tabs = styled.div`
+  width: 100%;
+  display: flex;
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 10%),
+    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+  border-radius: 5px;
+  overflow: hidden;
+`;

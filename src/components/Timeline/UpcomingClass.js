@@ -12,7 +12,7 @@ const UpcomingClassContainer = styled.div`
 
   & span:nth-child(1) {
     font-size: 2em;
-    color: green;
+    color: #f24333;
     font-family: "Fredoka One", cursive;
     letter-spacing: 0.2em;
   }
@@ -77,7 +77,7 @@ function UpcomingClass({ startsIn, reset }) {
       primary="Machine Learning"
       secondary="CSE 4th Year (60 Students)"
       footer="Upcoming class"
-      color="green"
+      color="#F24333"
       loading={totalSeconds === null ? true : false}>
       <UpcomingClassContainer>
         <span>

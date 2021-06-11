@@ -1,11 +1,7 @@
 .notification {
-  width: max(1000px, 60%);
+  width: 80%;
+  min-height: 85%;
+  place-self: center;
 
-  min-height: 80vh;
   padding: 2em 4em;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
 }
