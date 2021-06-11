@@ -1,22 +1,20 @@
-import { Button } from "@material-ui/core";
 import React from "react";
+import { Button } from "@material-ui/core";
 import styled from "styled-components";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FilterTab from "./FilterTab";
 import FiberNewIcon from "@material-ui/icons/FiberNew";
-import PaginationButtons from "../Manage/PaginationButtons";
+
+import Dim from "../../baseUI/Dim";
+import BasePaginationButtons from "../../baseUI/PaginationButton";
 
 const MainContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
 `;
-const Dim = styled.span`
-  font-weight: 200;
-  color: grey;
-  font-size: 0.8em;
-`;
-const StatusBarContainer = styled.div`
+
+const StatusBar = styled.div`
   display: flex;
   width: 100%;
 
@@ -41,6 +39,17 @@ const StatusBarContainer = styled.div`
   }
 `;
 
+const PaginationButton = styled(BasePaginationButtons)`
+  align-self: flex-end;
+  margin-top: 1.5em;
+  width: 14em;
+  font-size: 1.1em;
+
+  & > button {
+    background: #e2e6f2;
+  }
+`;
+
 const BoldButton = styled(Button)`
   & > .MuiButton-label {
     font-weight: 600;
@@ -48,7 +57,6 @@ const BoldButton = styled(Button)`
 `;
 
 const CardContainer = styled.div`
-  margin: auto;
   margin-top: 1em;
   width: 80%;
   align-self: center;
@@ -60,13 +68,12 @@ const CardContainer = styled.div`
   }
 `;
 
-const BroadcastCard = styled.div`
+const BroadcastCardWrapper = styled.div`
   width: 100%;
   min-height: 6em;
   border-radius: 10px;
   position: relative;
   background: #e2e6f2;
-
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -102,75 +109,161 @@ const BroadcastCard = styled.div`
     color: black !important;
   }
 
-  & .broadcast {
+  & .content {
     width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
 
-    & .broadcast__heading {
+    & .heading {
       display: flex;
       align-items: center;
       font-size: 1.2em;
       color: rgb(31, 31, 31);
     }
 
-    & .broadcast__content {
+    & .received {
+      display: flex;
+      align-items: center;
+    }
+
+    & .sentby {
+      display: flex;
+      align-items: center;
+      padding: 0em 0.2em;
+
+      & > *:not(:last-child) {
+        margin-right: 0.3em;
+      }
+      & > img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        filter: drop-shadow(0 0.125em 0.25em rgba(9, 30, 80, 0.2));
+      }
+
+      & span.name {
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      & span.position {
+        font-weight: 200;
+      }
+    }
+
+    & .text {
       color: rgba(31, 31, 31, 0.8);
       color: grey;
     }
   }
 `;
 
-const SenderContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0em 0.2em;
+const broadcastData = [
+  {
+    index: 1,
+    type: "RECEIVED",
+    read: false,
+    senderName: "Shivam Singh",
+    senderImg: "https://unsplash.it/1920/1080",
+    senderPosition: "Admin",
+    receivedCount: 7,
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita placeat consequatur vitae nemo atque cupiditate rem assumenda vel?",
+    created: "21 June 1999",
+  },
+  {
+    index: 2,
+    type: "SENT",
+    sentCount: 8,
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita placeat consequatur vitae nemo atque cupiditate rem assumenda vel?",
+    created: "21 June 1999",
+  },
+  {
+    index: 1,
+    type: "RECEIVED",
+    read: false,
+    senderName: "Shivam Singh",
+    senderImg: "https://unsplash.it/1920/1080",
+    senderPosition: "Admin",
+    receivedCount: 7,
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita placeat consequatur vitae nemo atque cupiditate rem assumenda vel?",
+    created: "21 June 1999",
+  },
+  {
+    index: 2,
+    type: "SENT",
+    sentCount: 8,
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita placeat consequatur vitae nemo atque cupiditate rem assumenda vel?",
+    created: "21 June 1999",
+  },
+];
 
-  & > *:not(:last-child) {
-    margin-right: 0.3em;
-  }
-  & > img {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-  }
-
-  & span.name {
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--primary);
-  }
-
-  & span.position {
-    font-weight: 200;
-  }
-`;
-
-function Sender({ className, name, img, position }) {
+function BroadcastCard({
+  index,
+  type,
+  read,
+  senderName,
+  senderImg,
+  senderPosition,
+  receivedCount,
+  sentCount,
+  text,
+  created,
+}) {
   return (
-    <SenderContainer className={className}>
-      <img src={img} height="80px" alt="" />
-      <span className="name">{name}</span>
-      <span className="position">
-        <Dim>({position})</Dim>
+    <BroadcastCardWrapper>
+      <span className="index">{index}.</span>
+
+      <div className="content">
+        <div className="heading">
+          {type.toLowerCase() === "received" && (
+            <div className="received">
+              <span>Sent By</span>
+              <div className="sentby">
+                <img src={senderImg} height="80px" alt="" />
+                <span className="name">{senderName}</span>
+                <span className="position">
+                  <Dim>({senderPosition})</Dim>
+                </span>
+              </div>
+              <span>to you and {receivedCount - 1} others.</span>
+            </div>
+          )}
+
+          {type.toLowerCase() === "sent" && (
+            <div className="sent">
+              Sent by YOU to {sentCount} people &nbsp; <Dim>(view)</Dim>
+            </div>
+          )}
+        </div>
+
+        <div className="text">{text}</div>
+      </div>
+
+      <span className="created">
+        <Dim>{created}</Dim>
       </span>
-    </SenderContainer>
+
+      {/*TODO:*/}
+      {type === "SENT" && (
+        <span className="readstatus">
+          <Dim>Read by 5/16</Dim>
+        </span>
+      )}
+
+      {read === false && <FiberNewIcon />}
+    </BroadcastCardWrapper>
   );
 }
-
-const ModifiedPaginationButtons = styled(PaginationButtons)`
-  align-self: flex-end;
-  font-size: 12px;
-  margin-top: 2em;
-`;
 
 function Broadcast() {
   return (
     <MainContainer>
-      <StatusBarContainer>
+      <StatusBar>
         <h3>All Broadcasts (40)</h3>
+        {/*TODO:*/}
         <FilterTab />
         <BoldButton
           variant="contained"
@@ -182,110 +275,14 @@ function Broadcast() {
         <h3>
           <span>Page</span> 2/6
         </h3>
-      </StatusBarContainer>
+      </StatusBar>
 
       <CardContainer>
-        <BroadcastCard>
-          <span className="index">1.</span>
-
-          <div className="broadcast">
-            <div className="broadcast__heading">
-              <span>Sent By</span>
-              <Sender
-                img="http://unsplash.it/1000/1505"
-                name="Shivam Singh"
-                position="Admin"
-              />
-              <span>to you and 6 others.</span>
-            </div>
-
-            <div className="broadcast__content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-              placeat consequatur vitae nemo atque cupiditate rem assumenda vel?
-            </div>
-          </div>
-
-          <span className="created">
-            <Dim>28 Nov 1998</Dim>
-          </span>
-          <FiberNewIcon />
-        </BroadcastCard>
-
-        <BroadcastCard>
-          <span className="index">2.</span>
-
-          <div className="broadcast">
-            <div className="broadcast__heading">
-              Sent by YOU to 16 people &nbsp; <Dim>(view)</Dim>
-            </div>
-
-            <div className="broadcast__content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam
-              dolores amet, vel eligendi ducimus, facilis repudiandae sequi
-              laboriosam aliquid odio libero enim incidunt, ex veniam.
-            </div>
-          </div>
-
-          <span className="created">
-            <Dim>28 Nov 1998</Dim>
-          </span>
-
-          <span className="readstatus">
-            <Dim>Read by 5/16</Dim>
-          </span>
-        </BroadcastCard>
-
-        <BroadcastCard>
-          <span className="index">1.</span>
-
-          <div className="broadcast">
-            <div className="broadcast__heading">
-              <span>Sent By</span>
-              <Sender
-                img="http://unsplash.it/1000/1505"
-                name="Shivam Singh"
-                position="Admin"
-              />
-              <span>to you and 6 others.</span>
-            </div>
-
-            <div className="broadcast__content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-              placeat consequatur vitae nemo atque cupiditate rem assumenda vel?
-            </div>
-          </div>
-
-          <span className="created">
-            <Dim>28 Nov 1998</Dim>
-          </span>
-          <FiberNewIcon />
-        </BroadcastCard>
-
-        <BroadcastCard>
-          <span className="index">2.</span>
-
-          <div className="broadcast">
-            <div className="broadcast__heading">
-              Sent by YOU to 16 people &nbsp; <Dim>(view)</Dim>
-            </div>
-
-            <div className="broadcast__content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam
-              dolores amet, vel eligendi ducimus, facilis repudiandae sequi
-              laboriosam aliquid odio libero enim incidunt, ex veniam.
-            </div>
-          </div>
-
-          <span className="created">
-            <Dim>28 Nov 1998</Dim>
-          </span>
-
-          <span className="readstatus">
-            <Dim>Read by 5/16</Dim>
-          </span>
-        </BroadcastCard>
+        {broadcastData.map((item) => {
+          return <BroadcastCard {...item} />;
+        })}
       </CardContainer>
-      <ModifiedPaginationButtons />
+      <PaginationButton disablePrev={true} />
     </MainContainer>
   );
 }

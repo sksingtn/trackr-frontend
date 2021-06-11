@@ -1,62 +1,14 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-const getHeader = (identifier) => {
-  switch (identifier) {
-    case 1:
-      return "Students";
-    case 2:
-      return "Faculty";
-    case 3:
-      return "Batch";
-    default:
-      return false;
-  }
-};
-
-function ManageHeader({ section, setSection }) {
-  return (
-    <ManageContainer>
-      <Header>{`Manage ${getHeader(section)}`}</Header>
-      <SwitchContainer>
-        <SwitchOption checked={section === 1} onClick={() => setSection(1)}>
-          <i class="fas fa-user-graduate"></i>
-          <span>Student</span>
-        </SwitchOption>
-        <SwitchOption checked={section === 2} onClick={() => setSection(2)}>
-          <i class="fas fa-chalkboard-teacher"></i>
-          <span>Faculty</span>
-        </SwitchOption>
-        <SwitchOption checked={section === 3} onClick={() => setSection(3)}>
-          <i class="fab fa-algolia"></i>
-          <span>Batch</span>
-        </SwitchOption>
-      </SwitchContainer>
-    </ManageContainer>
-  );
-}
-
-export default ManageHeader;
-
-const ManageContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Header = styled.h1`
-  font-weight: 400;
-  color: #253858;
-`;
-
-const SwitchContainer = styled.div`
+export const SquareTabs = styled.div`
   display: flex;
   padding: 0.8em 1.6em;
   border-radius: 20px;
   background: #e2e6f2;
 `;
 
-const SwitchOption = styled.div`
+const TabWrapper = styled.div`
   width: 4em;
   padding: 0.5em 0.8em 0.1em 0.8em;
   display: flex;
@@ -118,3 +70,12 @@ const SwitchOption = styled.div`
     color: ${(props) => (props.checked ? "whitesmoke" : "rgba(0, 0, 0, 0.7)")};
   }
 `;
+
+export function Tab({ className, text, iconName, checked, onClick }) {
+  return (
+    <TabWrapper checked={checked} className={className} onClick={onClick}>
+      <i class={iconName}></i>
+      <span>{text}</span>
+    </TabWrapper>
+  );
+}

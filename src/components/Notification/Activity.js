@@ -3,7 +3,9 @@ import React from "react";
 import styled from "styled-components";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FiberNewIcon from "@material-ui/icons/FiberNew";
-import PaginationButtons from "../Manage/PaginationButtons";
+
+import Dim from "../../baseUI/Dim";
+import BasePaginationButtons from "../../baseUI/PaginationButton";
 
 const MainContainer = styled.div`
   width: 100%;
@@ -11,7 +13,7 @@ const MainContainer = styled.div`
   flex-direction: column;
 `;
 
-const StatusBarContainer = styled.div`
+const StatusBar = styled.div`
   display: flex;
   width: 100%;
 
@@ -43,7 +45,6 @@ const BoldButton = styled(Button)`
 `;
 
 const CardContainer = styled.div`
-  margin: auto;
   margin-top: 1em;
   width: 80%;
   align-self: center;
@@ -55,7 +56,7 @@ const CardContainer = styled.div`
   }
 `;
 
-const ActivityCard = styled.div`
+const ActivityCardWrapper = styled.div`
   width: 100%;
   min-height: 6em;
   border-radius: 10px;
@@ -99,22 +100,61 @@ const ActivityCard = styled.div`
   }
 `;
 
-const Dim = styled.span`
-  font-weight: 200;
-  color: grey;
-  font-size: 0.8em;
+const PaginationButton = styled(BasePaginationButtons)`
+  align-self: flex-end;
+  margin-top: 1.5em;
+  width: 14em;
+  font-size: 1.1em;
+
+  & > button {
+    background: #e2e6f2;
+  }
 `;
 
-const ModifiedPaginationButtons = styled(PaginationButtons)`
-  align-self: flex-end;
-  font-size: 12px;
-  margin-top: 2em;
-`;
+const activityData = [
+  {
+    index: 1,
+    text: "You added XYZ as faculty and invited them to create a FACULTY Account with xyz@email.com.You added XYZ as faculty and invited them to create a FACULTY Account with xyz@email.com.",
+    created: "21 June 1999",
+    read: false,
+  },
+  {
+    index: 2,
+    text: "You added XYZ as faculty and invited them to create a FACULTY Account with xyz@email.com.",
+    created: "21 June 1999",
+    read: false,
+  },
+  {
+    index: 3,
+    text: "You changed the invite email from @ to @ to claim the 'XYZ' Faculty Account.",
+    created: "21 June 1999",
+    read: true,
+  },
+  {
+    index: 4,
+    text: "You invited xyz@email.com to claim the 'XYZ' FACULTY Account.",
+    created: "21 June 1999",
+    read: true,
+  },
+];
+
+function ActivityCard({ index, text, read, created }) {
+  return (
+    <ActivityCardWrapper>
+      <span className="index">{index}.</span>
+      <span className="activity">{text}</span>
+      <span className="created">
+        <Dim>{created}</Dim>
+      </span>
+      {!read && <FiberNewIcon />}
+    </ActivityCardWrapper>
+  );
+}
 
 function Activity() {
   return (
     <MainContainer>
-      <StatusBarContainer>
+      <StatusBar>
         <h3>All Activities (40)</h3>
         <BoldButton
           variant="contained"
@@ -126,52 +166,13 @@ function Activity() {
         <h3>
           <span>Page</span> 2/6
         </h3>
-      </StatusBarContainer>
+      </StatusBar>
       <CardContainer>
-        <ActivityCard>
-          <span className="index">1.</span>
-          <span className="activity">
-            You added XYZ as faculty and invited them to create a FACULTY
-            Account with xyz@email.com.You added XYZ as faculty and invited them
-            to create a FACULTY Account with xyz@email.com.
-          </span>
-          <span className="created">
-            <Dim>28 Nov 1998</Dim>
-          </span>
-          <FiberNewIcon />
-        </ActivityCard>
-        <ActivityCard>
-          <span className="index">2.</span>
-          <span className="activity">
-            You added XYZ as faculty and invited them to create a FACULTY
-            Account with xyz@email.com.
-          </span>
-          <span className="created">
-            <Dim>21 June 2015</Dim>
-          </span>
-          <FiberNewIcon />
-        </ActivityCard>
-        <ActivityCard>
-          <span className="index">3.</span>
-          <span className="activity">
-            You changed the invite email from @ to @ to claim the 'XYZ' Faculty
-            Account.
-          </span>
-          <span className="created">
-            <Dim>16 Nov 2015</Dim>
-          </span>
-        </ActivityCard>
-        <ActivityCard>
-          <span className="index">4.</span>
-          <span className="activity">
-            You invited xyz@email.com to claim the 'XYZ' FACULTY Account.
-          </span>
-          <span className="created">
-            <Dim>16 Nov 2012</Dim>
-          </span>
-        </ActivityCard>
+        {activityData.map((item) => {
+          return <ActivityCard {...item} />;
+        })}
       </CardContainer>
-      <ModifiedPaginationButtons />
+      <PaginationButton disablePrev={true} />
     </MainContainer>
   );
 }
