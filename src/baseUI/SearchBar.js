@@ -76,6 +76,16 @@ function SearchBar({
   onClear,
   showClear = false,
 }) {
+  const handleEnter = (e) => {
+    const keyPressed = e.keyCode || e.which;
+
+    if (keyPressed === 13 && onSearch) {
+      onSearch();
+    } else if (keyPressed === 27 && onClear) {
+      onClear();
+    }
+  };
+
   return (
     <SerachBarContainer className={className} style={style}>
       <input
@@ -83,6 +93,7 @@ function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyUp={handleEnter}
       />
 
       <button className="clearbtn" onClick={onClear} hidden={!showClear}>
