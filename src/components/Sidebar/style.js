@@ -118,7 +118,8 @@ export const SidebarLinkWrapper = styled(Link)`
 
   & > .link-text {
     margin-left: 0.8em;
-    font-weight: ${(props) => (props.active ? "800" : "400")};
+    font-weight: ${(props) => (props.active ? "600" : "400")};
+    letter-spacing: 0.5px;
   }
 `;
 

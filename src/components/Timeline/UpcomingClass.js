@@ -13,12 +13,13 @@ const UpcomingClassContainer = styled.div`
   & span:nth-child(1) {
     font-size: 2em;
     color: #f24333;
-    font-family: "Fredoka One", cursive;
+    font-family: "PT Mono", monospace;
     letter-spacing: 0.2em;
   }
 
   & span:nth-child(2) {
     color: rgba(31, 31, 31, 0.6);
+    font-family: "PT Mono", monospace;
   }
 `;
 
@@ -41,7 +42,6 @@ const convertTime = (totalSeconds) => {
 };
 
 function UpcomingClass({ startsIn, reset }) {
-  //TODO: Stop the countdown from jiggling
   //TODO: A popup should appear on completion of timer.
   const [totalSeconds, setTotalSeconds] = useState(null);
 
