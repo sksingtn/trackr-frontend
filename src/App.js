@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 import { MainContainer } from "./components/Containers/Containers";
 import Admin from "./components/Admin/Admin";
+import Faculty from "./components/Faculty/Faculty";
 
 //TODO: Proptypes
 

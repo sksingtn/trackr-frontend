@@ -19,7 +19,7 @@ const PreviousClassContainer = styled.div`
     font-size: 2em;
 
     & > * {
-      font-family: "Fredoka One", cursive;
+      font-family: "PT Mono", monospace;
       color: orange;
     }
   }

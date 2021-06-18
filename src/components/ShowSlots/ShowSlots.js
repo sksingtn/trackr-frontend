@@ -116,7 +116,7 @@ function Highlight({ pre, content, post }) {
   );
 }
 
-function ShowSlots({ weekdayData, deleteClass }) {
+function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
   const config = {
     delta: 10,
     preventDefaultTouchmoveEvent: false,
@@ -273,7 +273,7 @@ function ShowSlots({ weekdayData, deleteClass }) {
     );
 
   return (
-    <MainContainer>
+    <MainContainer style={style} clasName={clasName}>
       <SearchBar
         placeholder="Search for classes"
         style={{ width: "25em", marginLeft: "4em" }}

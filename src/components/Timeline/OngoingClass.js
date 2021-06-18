@@ -19,9 +19,9 @@ const OngoingClassContainer = styled.div`
     justify-content: space-between;
     font-size: 2em;
     margin-bottom: 0.2em;
+    font-family: "PT Mono", monospace;
 
     & > * {
-      font-family: "Fredoka One", cursive;
       color: var(--primary);
     }
   }
