@@ -89,7 +89,7 @@ export const SlotContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0);
   border: 2px solid rgba(52, 56, 107, 0.3);
   border-top: none;
   border-radius: 0px 0px 15px 15px;
