@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const MainContainer = styled.div`
   width: 100%;
@@ -168,6 +168,8 @@ export const Slot = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    ${(props) => props.selected && css`
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px #b6244f;`}
 
     &:hover {
       box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px #b6244f;

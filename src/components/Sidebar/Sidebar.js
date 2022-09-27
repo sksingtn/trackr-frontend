@@ -1,4 +1,7 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { userLoggedOut } from '../Auth/authSlice';
 
 import {
   SidebarWrapper,
@@ -12,6 +15,15 @@ import { useLocation } from "react-router";
 
 function Sidebar({ children }) {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //TODO: Use <Navigate/> instead?
+  const handleLogout = () => {
+    dispatch(userLoggedOut())
+    navigate('/login')
+
+  }
 
   return (
     <SidebarWrapper>
@@ -35,9 +47,9 @@ function Sidebar({ children }) {
         )}
       </LinksContainer>
 
-      <LogoutButtonWrapper>
+      <LogoutButtonWrapper onClick={handleLogout}>
         <i className="fas fa-sign-out-alt" />
-        <span className="btn-text">LOGOUT</span>
+        <span className="btn-text" >LOGOUT</span>
       </LogoutButtonWrapper>
     </SidebarWrapper>
   );

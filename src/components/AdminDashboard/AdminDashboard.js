@@ -1,6 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import { DashboardWrapper, BatchDetailsContainer, TopBar } from "./style";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { TextField } from "@material-ui/core";
@@ -9,6 +10,14 @@ import BaseStats from "../Stats/Stats";
 import ShowSlots from "../ShowSlots/ShowSlots";
 import { data1, data2 } from "../../testData";
 import ManageSlots from "../ManageSlots/ManageSlots";
+import axiosInstance from "../axios";
+import {
+  getBatchList, selectBatchList, selectCurrentBatch,
+  setSelectedBatch, selectBatchListStatus, selectDetailedBatch,
+  getBatchDetail, selectBatchDetailLoading, selectCurrentSlot,
+  resetSelectedSlot
+} from './adminDashboardSlice'
+
 
 //TODO: Put a wrapper around showslots
 
@@ -19,16 +28,54 @@ const Stats = styled(BaseStats)`
   margin-bottom: 4em;
 `;
 
-const batchOptions = [{ title: "C.S.E 4th Year", year: 1994 }];
 
 function AdminDashboard() {
+
+  const dispatch = useDispatch();
+  const selectedBatch = useSelector(selectCurrentBatch)
+  const selectedSlot = useSelector(selectCurrentSlot);
+  const batchList = useSelector(selectBatchList)
+  const batchListStatus = useSelector(selectBatchListStatus)
+  const batchDetail = useSelector(selectDetailedBatch)
+  const batchDetailLoading = useSelector(selectBatchDetailLoading)
+
+  //TODO: Reset relevant state when batch is switched
+  useEffect(() => {
+    dispatch(getBatchList())
+  }, [])
+
+  useEffect(() => {
+    dispatch(resetSelectedSlot())
+    //If batch detail not in store then fetch it
+    if (batchDetail === null && selectedBatch !== null) {
+      dispatch(getBatchDetail(selectedBatch.id))
+    }
+  }, [selectedBatch])
+
+  if (batchListStatus === 'pending') {
+    return <h1>Loading...</h1>
+  }
+
+  if (batchDetailLoading || batchDetail == null) {
+    return <h1>Batch Details Loading...</h1>
+  }
+
+  if (batchListStatus === 'fetched' && batchList.length === 0) {
+    return <h1>No Batch Created Yet. Click here to create</h1>
+  }
+
   return (
     <DashboardWrapper>
       <BatchDetailsContainer>
         <TopBar>
           <Autocomplete
             id="combo-box-demo"
-            options={batchOptions}
+            value={selectedBatch}
+            onChange={(event, newValue) => {
+              dispatch(setSelectedBatch(newValue));
+            }}
+            options={batchList}
+            disableClearable
             getOptionLabel={(option) => option.title}
             style={{ width: 300 }}
             renderInput={(params) => (
@@ -39,20 +86,20 @@ function AdminDashboard() {
               />
             )}
           />
-          <Toggle text={{ on: "ACTIVE", off: "PAUSED" }} />
+          <Toggle checked={batchDetail.isActive} text={{ on: "ACTIVE", off: "PAUSED" }} />
         </TopBar>
         <Stats
           info={{
-            totalStudents: 1,
-            totalClasses: 15,
-            totalFaculties: 8,
+            totalStudents: batchDetail.totalStudents,
+            totalClasses: batchDetail.totalClasses,
+            totalFaculties: batchDetail.totalFaculties
           }}
         />
         <ShowSlots
-          weekdayData={Object.keys(TestData.weekdayData).map((key) => ({
-            week: key,
-            data: TestData.weekdayData[key],
-          }))}
+          weekdayData={batchDetail.weekdayData}
+          currentWeekday={batchDetail.currentWeekday}
+          selectedSlot={selectedSlot}
+          selectedBatch={selectedBatch?.id}
         />
       </BatchDetailsContainer>
 

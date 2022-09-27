@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useSwipeable } from "react-swipeable";
+import { useDispatch } from "react-redux";
 
 import {
   MainContainer,
@@ -16,62 +17,104 @@ import EditIcon from "@material-ui/icons/Edit";
 import RoundedIconButton from "../../baseUI/RoundedIconButton";
 import SearchBar from "../../baseUI/SearchBar";
 import Tooltip from "../Utils/Tooltip/Tooltip";
+import { adminSlotRetriveUpdateDeleteUrl } from '../urls';
+import axiosInstance from "../axios";
+import { setToastSuccess, setToastError } from "../Utils/Toast/toastSlice";
+import { removeSlot, setSelectedSlot } from '../AdminDashboard/adminDashboardSlice'
 
 //TODO: Animate additon/deletion of slots
-//TODO: Move slot hover effects to click effects
-//TODO: Determine if weekdayData needs to be processed first
 
-function Weekday({ day, slotData, deleteClass, highlight }) {
-  //Used to output individual week
+//Used to output individual week
+function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch }) {
+
+  const dispatch = useDispatch();
+
+  const timeSort = (a, b) => {
+    const t1 = new Date('0000-01-01 ' + a.startTime.substring(0, 5));
+    const t2 = new Date('0000-01-01 ' + b.startTime.substring(0, 5));
+
+    if (t1 < t2) {
+      return -1
+    }
+    else {
+      return 1
+    }
+  }
+
+  const sortedSlots = slotData.slice().sort(timeSort)
+
+  const handleSlotDelete = async (slotId, weekday, batch) => {
+    if (slotId === selectedSlot) {
+      dispatch(setToastError("Slot is currently being edited!"))
+      return
+    }
+
+    try {
+      const response = await axiosInstance.delete(adminSlotRetriveUpdateDeleteUrl(slotId))
+      if (response.data?.data === slotId) {
+        dispatch(removeSlot({ slotId, weekday, batch }))
+        dispatch(setToastSuccess("Slot deleted successfully!"))
+      }
+      else {
+        throw new Error()
+      }
+    }
+    catch (err) {
+      dispatch(setToastError("Something went wrong!"))
+    }
+  }
+
   return (
     <WeekdayContainer highlight={highlight}>
       <div className="heading">
         <span className="weekday-name">{day}</span>
-        <span className="count">{slotData.length} Classes</span>
+        <span className="count">{sortedSlots.length} Classes</span>
       </div>
 
       <SlotContainer>
-        {slotData.length === 0 && (
+        {sortedSlots.length === 0 && (
           <div className="empty">
             <i class="fas fa-sad-tear"></i>
             <span>Such empty!</span>
           </div>
         )}
-        {slotData.map((slot, index) => {
+        {sortedSlots.map((slot, index) => {
           const {
             id,
-            created,
+            lastModified,
             duration,
-            facultyName,
+            faculty,
             title,
             startTime,
             endTime,
           } = slot;
 
+          const { name: facultyName, image: facultyImage } = faculty;
+
           return (
-            <Slot key={id}>
+            <Slot key={id} selected={id === selectedSlot}>
               <span className="index">{index + 1}.</span>
 
               <div className="content">
                 {/*Elements that disappear on hover*/}
                 <div className="topbar detailsbar">
                   <span className="duration">{duration}</span>
-                  <Dim>{created}</Dim>
+                  <Dim>{lastModified}</Dim>
                 </div>
 
                 {/*Elements that appear on hover*/}
                 <div className="topbar managebar">
-                  <button className="editslotbtn">
+                  <button className="editslotbtn" onClick={() => dispatch(setSelectedSlot(id))}>
                     <span>Edit Slot</span>
                     <EditIcon style={{ fontSize: "1em" }} />
                   </button>
 
-                  <RoundedIconButton color="red">
+                  <RoundedIconButton color="red" onClick={() => handleSlotDelete(id, day, selectedBatch)}>
                     <i className="fas fa-trash"></i>
                   </RoundedIconButton>
                 </div>
 
-                <Tooltip maxLength={18}>
+                <Tooltip maxLength={14}>
                   <span className="title">{title}</span>
                 </Tooltip>
 
@@ -104,6 +147,8 @@ function Weekday({ day, slotData, deleteClass, highlight }) {
   );
 }
 
+
+
 function Highlight({ pre, content, post }) {
   // Used to highlight the matched text after search in search results
 
@@ -116,7 +161,7 @@ function Highlight({ pre, content, post }) {
   );
 }
 
-function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
+function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot, selectedBatch }) {
   const config = {
     delta: 10,
     preventDefaultTouchmoveEvent: false,
@@ -125,30 +170,31 @@ function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
     rotationAngle: 0,
   };
 
+
   const handleLeft = (e) =>
     setCaraousel(
       position === 0
         ? {
-            position: target.length - 1,
-            direction: "left",
-          }
+          position: target.length - 1,
+          direction: "left",
+        }
         : {
-            position: position - 1,
-            direction: "left",
-          }
+          position: position - 1,
+          direction: "left",
+        }
     );
 
   const handleRight = (e) =>
     setCaraousel(
       position === target.length - 1
         ? {
-            position: 0,
-            direction: "right",
-          }
+          position: 0,
+          direction: "right",
+        }
         : {
-            position: position + 1,
-            direction: "right",
-          }
+          position: position + 1,
+          direction: "right",
+        }
     );
 
   const handlers = useSwipeable({
@@ -158,9 +204,14 @@ function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
   });
 
   //Direction attribute is needed to decide the animation direction for the caraousel.
-  const [caraousel, setCaraousel] = useState({
-    position: 0,
-    direction: "",
+  const [caraousel, setCaraousel] = useState(() => {
+    //Keep the current weekday at the middle of carousel
+    let position = weekdayData.findIndex((item) => item.weekday === currentWeekday)
+    position = position === 0 ? weekdayData.length - 1 : position - 1
+    return {
+      position,
+      direction: "",
+    }
   });
 
   //For implementation of search with highlighted text feature.
@@ -201,9 +252,11 @@ function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
 
           for (let i = 0; i < weekday.data.length; i++) {
             let newWeekdayData = { ...weekday.data[i] };
-            const { title, facultyName } = newWeekdayData;
+            const { title, faculty } = newWeekdayData;
+            const facultyName = faculty.name;
 
             //Case insensitive match
+            //newline to make sure match is independent between title & faculty
             if (
               (title.toLowerCase() + "\n" + facultyName.toLowerCase()).includes(
                 searchedText.toLowerCase()
@@ -228,7 +281,7 @@ function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
               });
 
               newWeekdayData.title = changed[0];
-              newWeekdayData.facultyName = changed[1];
+              newWeekdayData.faculty.name = changed[1];
               newData.push(newWeekdayData);
             }
           }
@@ -305,15 +358,16 @@ function ShowSlots({ style, clasName, weekdayData, deleteClass }) {
         <TransitionGroup component={null} exit={false}>
           {pageData.map((item, index) => (
             <CSSTransition
-              key={item.week}
+              key={item.weekday}
               appear={true}
               timeout={500}
               classNames={direction}>
               <Weekday
-                day={item.week}
+                day={item.weekday}
                 slotData={item.data}
-                deleteClass={deleteClass}
-                highlight={index === 1}
+                highlight={item.weekday === currentWeekday}
+                selectedSlot={selectedSlot}
+                selectedBatch={selectedBatch}
               />
             </CSSTransition>
           ))}

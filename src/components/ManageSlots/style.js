@@ -20,14 +20,26 @@ export const ManageSlotContainer = styled.div`
 
   & > .heading {
     width: 100%;
-    text-align: center;
 
     & > span {
       color: whitesmoke;
       font-size: 1.2em;
       letter-spacing: 0.2em;
-      word-spacing: 0.3em;
+      word-spacing: 0.1em;
       font-weight: 800;
+    }
+
+    & > .clearSlot{
+      outline: none;
+      color:white;
+      background: transparent;
+      font-size: 0.8em;
+      cursor: pointer;
+      border : 1px solid white;
+      border-radius: 0.3em;
+      padding: 0.35em 0.35em;
+      font-weight: 600;
+      letter-spacing: 0.15em;
     }
   }
 
@@ -165,8 +177,8 @@ export const FacultyCardWrapper = styled.div`
 
   &:hover {
     ${(props) =>
-      !props.checked &&
-      css`
+    !props.checked &&
+    css`
         background: #e2e6f2;
       `}
 
@@ -222,3 +234,53 @@ export const InviteFacultySection = styled.section`
     background: #b6244f;
   }
 `;
+
+export const CurrentFaculty = styled.div`
+  width: 100%;
+  height: 3em;
+  background: white;
+  padding: 0.3em 0.5em;
+  display: flex;
+  align-items: center;
+  margin-top: 0.5em;
+  border-radius: 0.3em;
+  color:black;
+  position: relative;
+
+  & > img{
+    width: 2.5em;
+    height: 2.5em;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgb(221, 219, 219);
+    filter: drop-shadow(0 0.125em 0.25em rgba(9, 30, 80, 0.3));
+    margin: 0px 0.625em;
+  }
+
+  & > span{
+    color: var(--primary);
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+
+  & > button{
+    position: absolute;
+    right: 0;
+    margin-right: 0.6em;
+    outline: none;
+    color:var(--primary);
+    background: transparent;
+    cursor: pointer;
+    border : 1px solid var(--primary);
+    border-radius: 0.3em;
+    padding: 0.35em 0.35em;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover{
+      color:white;
+      background: var(--primary);
+    }
+    
+  }
+`

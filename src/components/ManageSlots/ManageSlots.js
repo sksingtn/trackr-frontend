@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
-import Tooltip from "../Utils/Tooltip/Tooltip";
+import React, { useState, useEffect, Fragment } from "react";
 
-//External Imports
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -19,6 +17,7 @@ import {
   FacultyCardContainer,
   FacultyCardWrapper,
   InviteFacultySection,
+  CurrentFaculty
 } from "./style";
 import TimeInput from "../../baseUI/TimeInput";
 import { Tab, Tabs as BaseTabs } from "../../baseUI/Tabs";
@@ -28,6 +27,15 @@ import Checkbox from "../../baseUI/Checkbox";
 import Tag from "../../baseUI/Tag";
 import Dim from "../../baseUI/Dim";
 import styled from "styled-components";
+import Tooltip from "../Utils/Tooltip/Tooltip";
+import { setToastSuccess, setToastError } from "../Utils/Toast/toastSlice";
+import { IDLE_STATE, PENDING_STATE, FETCHED_STATE } from "../constants"
+import { ADMIN_CREATE_SLOT, ADMIN_LIST_CREATE_FACULTY, adminSlotRetriveUpdateDeleteUrl } from "../urls";
+import axiosInstance from "../axios";
+import {
+  selectCurrentBatch, selectCurrentSlot,
+  setSlot, resetSelectedSlot, updateSlot
+} from "../AdminDashboard/adminDashboardSlice";
 
 //TODO:Animate height change
 
@@ -51,31 +59,31 @@ const sampleData = [
   {
     id: 1,
     name: "Amit Maurya",
-    img: "http://unsplash.it/1000/1501",
+    img: "http://unsplash.it/800/600",
     status: "UNVERIFIED",
   },
   {
     id: 2,
     name: "Ramjeet Yadav",
-    img: "http://unsplash.it/1000/1502",
+    img: "http://unsplash.it/800/600",
     status: "INVITED",
   },
   {
     id: 3,
     name: "Arvind Singh",
-    img: "http://unsplash.it/1000/1503",
+    img: "http://unsplash.it/800/600",
     status: "UNVERIFIED",
   },
   {
     id: 4,
     name: "Pradeep Kumar",
-    img: "http://unsplash.it/1000/1504",
+    img: "http://unsplash.it/800/600",
     status: "VERIFIED",
   },
   {
     id: 5,
     name: "Utkarsh Singh",
-    img: "http://unsplash.it/1000/1505",
+    img: "http://unsplash.it/800/601",
     status: "UNVERIFIED",
   },
 ];
@@ -133,31 +141,44 @@ function FacultyCard({
   );
 }
 
-function ManageSlots({ createClass }) {
+function ManageSlots(props) {
+
+  const dispatch = useDispatch();
+  const selectedBatch = useSelector(selectCurrentBatch);
+  const selectedSlot = useSelector(selectCurrentSlot);
   //To Handle the TAB changes between search section & add section
   const [tab, setTab] = useState(0);
 
   //To Handle the API data
-  const [faculty, setFaculty] = useState({
+  const [facultyList, setFacultyList] = useState({
     count: 0,
-    next: null,
-    previous: null,
+    // next: null,
+    // previous: null,
+    currentPage: 1,
+    totalPages: 1,
     results: sampleData,
-    loading: false,
+    status: IDLE_STATE,
     isSearch: false,
   });
 
   //To handle Form Changes
-  const [form, setForm] = useState({
+  const formInitialState = {
     title: "",
-    startTime: "",
-    endTime: "",
-    weekdayChoice: "0",
-    facultyChoice: undefined,
-  });
+    start_time: "",
+    end_time: "",
+    weekday: "",
+    faculty: { id: null, name: null, image: null },
+  }
+  const [form, setForm] = useState(formInitialState);
+
+  let canSaveForm = false
+  if (form.title && form.weekday !== "" && form.faculty.id
+    && (form.start_time.length + form.end_time.length === 10)) {
+    canSaveForm = true
+  }
 
   let selectStyle = {};
-  if (form.weekdayChoice === "0") {
+  if (form.weekday === "") {
     selectStyle = { fontWeight: 400, color: "rgb(93, 92, 92)" };
   }
 
@@ -167,63 +188,122 @@ function ManageSlots({ createClass }) {
   //To Handler Faculty Search Bar
   const [facultySearch, setFacultySearch] = useState("");
 
+  useEffect(() => {
+    //Load new faculty data on component load & Tab Change
+    if (facultyList.status === IDLE_STATE && tab === 0) {
+      fetchFacultyList();
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    setForm(formInitialState)
+  }, [selectedBatch])
+
+  useEffect(async () => {
+    if (selectedSlot) {
+      try {
+        const response = await axiosInstance.get(adminSlotRetriveUpdateDeleteUrl(selectedSlot))
+        const { title, startTime: start_time, endTime: end_time, weekday, faculty } = response.data.data
+        setForm({ ...form, title, start_time, end_time, weekday, faculty })
+
+      }
+      catch (err) {
+        dispatch(setToastError("Something went wrong!"))
+      }
+    }
+
+  }, [selectedSlot])
+
+
+
+
   const handleInvite = async () => {
     const postData = { name: invite.name };
     const email = invite.email;
     if (email) {
       postData["email"] = email;
     }
-    console.log(postData);
 
-    const newFacultyResponse = await axios
-      .post(`http://localhost:8000/api/admin-faculty/`, postData, {
-        headers: {
-          Authorization: "Token 5cb0055b1e6fdb316389af267b0a1c3a43c085b5",
-        },
-      })
-      .then((res) => res.data);
+    try {
+      const response = await axiosInstance.post(ADMIN_LIST_CREATE_FACULTY, postData)
+      dispatch(setToastSuccess(response.data.data))
+      setInvite({ name: "", email: "" });
+      //So that faculty page refreshes
+      setFacultyList({ ...facultyList, status: IDLE_STATE })
+    }
+    catch (err) {
+      dispatch(setToastError(err.response.data.data))
+    }
 
-    console.log(newFacultyResponse);
-    setInvite({ name: "", email: "" });
   };
 
-  useEffect(() => {
-    //Load new faculty data on component load & Tab Change
-    handlePagination(`http://localhost:8000/api/admin-faculty/`);
-  }, [tab]);
+  //TODO:Refactor
+  const handleSave = async () => {
+    console.log(canSaveForm)
+    console.log(form)
+    if (canSaveForm && selectedSlot && selectedBatch) {
+      try {
+        const postData = {
+          ...form,
+          faculty: form.faculty.id
+        }
+        const response = await axiosInstance.put(adminSlotRetriveUpdateDeleteUrl(selectedSlot), postData)
+        const payload = {
+          slot: response.data.data,
+          batch: selectedBatch.id,
+        }
+        dispatch(updateSlot(payload))
+        dispatch(setToastSuccess(`Slot Updated SuccessFully`))
+        setForm(formInitialState)
+      }
+      catch (err) {
+        dispatch(setToastError(err.response.data.data))
+      }
+    }
+    else if (canSaveForm && selectedBatch) {
+      try {
+        const postData = {
+          ...form,
+          faculty: form.faculty.id,
+          batch: selectedBatch.id
+        }
+        const response = await axiosInstance.post(ADMIN_CREATE_SLOT, postData)
+        const payload = {
+          slot: response.data.data,
+          batch: selectedBatch.id
+        }
+        dispatch(setSlot(payload))
+        dispatch(setToastSuccess(`Slot Saved SuccessFully`))
+        setForm(formInitialState)
+      }
+      catch (err) {
+        dispatch(setToastError(err.response.data.data))
+      }
 
-  const handleSave = () => {
-    createClass(form);
-    setForm({
-      title: "",
-      startTime: "",
-      endTime: "",
-      weekdayChoice: "0",
-      facultyChoice: undefined,
-    });
+    }
+
   };
 
-  const handlePagination = async (url, isSearch = false) => {
-    setFaculty({ ...faculty, loading: true });
-    const facultydData = await axios
-      .get(url, {
-        headers: {
-          Authorization: "Token 5cb0055b1e6fdb316389af267b0a1c3a43c085b5",
-        },
+  const fetchFacultyList = async (pageNumber = 1, searchquery) => {
+
+    setFacultyList({ ...facultyList, status: PENDING_STATE })
+
+    const response = await axiosInstance.get(ADMIN_LIST_CREATE_FACULTY,
+      {
+        params: {
+          page: pageNumber,
+          q: searchquery
+        }
       })
-      .then((res) => res.data);
-    setTimeout(
-      () => setFaculty({ ...facultydData, loading: false, isSearch: isSearch }),
-      1000
-    );
+    setFacultyList({
+      ...response.data, status: FETCHED_STATE,
+      isSearch: Boolean(searchquery)
+    })
   };
 
   const handleFacultySearch = () => {
-    if (facultySearch) {
-      handlePagination(
-        `http://localhost:8000/api/admin-faculty/?q=${facultySearch}`,
-        true
-      );
+    if (facultySearch.length > 0) {
+      fetchFacultyList(1, facultySearch);
     }
   };
 
@@ -235,23 +315,170 @@ function ManageSlots({ createClass }) {
   };
 
   const handleClear = () => {
-    handlePagination(`http://localhost:8000/api/admin-faculty/`);
-    setTimeout(() => setFacultySearch(""), 500);
+    fetchFacultyList();
+    //setFacultyList({ ...facultyList, isSearch: false })
+    setFacultySearch("")
+    //setTimeout(() => setFacultySearch(""), 500);
   };
 
-  const handleFacultySelect = (id) => {
-    console.log("faculty clicked");
-    if (id === form.facultyChoice) {
-      setForm({ ...form, facultyChoice: null });
+  const handleFacultySelect = (id, name, image) => {
+
+    if (id === form.faculty.id) {
+      setForm({ ...form, faculty: { id: null, name: null, image: null } });
     } else {
-      setForm({ ...form, facultyChoice: id });
+      setForm({ ...form, faculty: { id, name, image } });
     }
   };
 
+  const handleClearUpdate = () => {
+    setForm(formInitialState)
+    dispatch(resetSelectedSlot())
+  }
+
+  const handleClearFaculty = () => {
+    setForm({
+      ...form,
+      faculty: { id: null, name: null, image: null }
+    })
+  }
+
+  const selectFacultySection = <SelectFacultySection hidden={tab !== 0}>
+    <SearchBar
+      placeholder={`Search in ${facultyList.count} faculties...`}
+      value={facultySearch}
+      onChange={(e) => setFacultySearch(e.target.value)}
+      onSearch={handleFacultySearch}
+      showClear={facultyList.isSearch}
+      onClear={handleClear}
+      style={{ marginBottom: "0.5em" }}
+    />
+
+    {facultyList.results.length === 0 && (
+      <span className="highlight">No Faculties Found!</span>
+    )}
+
+    <FacultyCardContainer>
+      {facultyList.results.map((item, count) => {
+        const { id, name, image, status, index } = item;
+
+        return (
+          <FacultyCard
+            id={id}
+            index={index}
+            facultyName={name}
+            imgURL={sampleData[count].img}
+            status={status}
+            checked={id === form.faculty.id}
+            onClick={() => handleFacultySelect(id, name, sampleData[count].img)}
+            loading={facultyList.status == PENDING_STATE}
+          />
+        );
+      })}
+    </FacultyCardContainer>
+
+    <ModifiedPaginationButton
+      onPrev={() => fetchFacultyList(facultyList.currentPage - 1, facultyList.isSearch ? facultySearch : undefined)}
+      disablePrev={facultyList.currentPage === 1}
+      onNext={() => fetchFacultyList(facultyList.currentPage + 1, facultyList.isSearch ? facultySearch : undefined)}
+      disableNext={facultyList.currentPage === facultyList.totalPages}
+    />
+  </SelectFacultySection>
+
+  const inviteFacultySection = <InviteFacultySection>
+    <TextField
+      value={invite.name}
+      onChange={(e) => setInvite({ ...invite, name: e.target.value })}
+      id="outlined-basic"
+      label="Faculty Name"
+      variant="outlined"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <AccountCircle
+              style={{ color: "#b6244f" }}
+              color="secondary"
+            />
+          </InputAdornment>
+        ),
+      }}
+    />
+    <TextField
+      value={invite.email}
+      onChange={(e) => setInvite({ ...invite, email: e.target.value })}
+      id="outlined-basic"
+      label="Email (Optional)"
+      variant="outlined"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <EmailIcon style={{ color: "#b6244f" }} color="secondary" />
+          </InputAdornment>
+        ),
+      }}
+    />
+
+    <Dim>Note:An Email Invite would be sent, if its provided.</Dim>
+
+    <Button
+      id="addFacultyButton"
+      variant="contained"
+      color="primary"
+      onClick={handleInvite}>
+      <i className="fas fa-user-plus"></i>
+      <span>Add Faculty</span>
+    </Button>
+  </InviteFacultySection>
+
+
+  const facultySection = <>
+    <Divider />
+    <Tabs>
+      <Tab
+        text="Select"
+        icon={<i class="fas fa-list" aria-hidden="true"></i>}
+        checked={tab === 0}
+        onClick={() => setTab(0)}
+      />
+      <Tab
+        text="Invite"
+        icon={<i class="fas fa-user-plus"></i>}
+        checked={tab === 1}
+        onClick={() => setTab(1)}
+      />
+    </Tabs>
+    {tab === 0 && selectFacultySection}
+
+    {tab === 1 && inviteFacultySection}
+  </>
+
+
+  let headingStyle = {}
+
+  if (selectedSlot === null) {
+    headingStyle = { textAlign: "center" }
+  }
+  else {
+    headingStyle = {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    }
+  }
+
+  console.log(facultyList)
+
   return (
     <ManageSlotContainer>
-      <div className="heading">
-        <span>Add a New Class</span>
+      <div className="heading" style={headingStyle}>
+        {selectedSlot === null ?
+          <span>Add a New Slot</span> :
+          <>
+            <span>Update Existing Slot</span>
+            <button className="clearSlot" onClick={handleClearUpdate}>
+              <i class="fas fa-times"></i> Clear
+            </button>
+          </>
+        }
       </div>
 
       <Divider />
@@ -263,17 +490,17 @@ function ManageSlots({ createClass }) {
 
       <div className="weekdayDropdown">
         <select
-          value={form.weekdayChoice}
+          value={form.weekday}
           style={selectStyle}
-          onChange={(e) => setForm({ ...form, weekdayChoice: e.target.value })}>
-          <option value="0">Choose a weekday</option>
-          <option value="Sunday">Sunday</option>
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-          <option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
+          onChange={(e) => setForm({ ...form, weekday: e.target.value })}>
+          <option value="">Choose a weekday</option>
+          <option value="0">Monday</option>
+          <option value="1">Tuesday</option>
+          <option value="2">Wednesday</option>
+          <option value="3">Thursday</option>
+          <option value="4">Friday</option>
+          <option value="5">Saturday</option>
+          <option value="6">Sunday</option>
         </select>
         <span className="icon">
           <i className="fas fa-caret-down fa-2x"></i>
@@ -283,134 +510,48 @@ function ManageSlots({ createClass }) {
       <TimeInputWrapper>
         <TimeInput
           placeholder="From hh:mm"
-          name="startTime"
-          value={form.startTime}
+          name="start_time"
+          value={form.start_time}
           onChange={handleTimeInput}
         />
 
         <TimeInput
           placeholder="To hh:mm"
-          name="endTime"
-          value={form.endTime}
+          name="end_time"
+          value={form.end_time}
           onChange={handleTimeInput}
         />
       </TimeInputWrapper>
 
-      <Divider />
-
-      <Tabs>
-        <Tab
-          text="Select"
-          icon={<i class="fas fa-list" aria-hidden="true"></i>}
-          checked={tab === 0}
-          onClick={() => setTab(0)}
-        />
-        <Tab
-          text="Invite"
-          icon={<i class="fas fa-user-plus"></i>}
-          checked={tab === 1}
-          onClick={() => setTab(1)}
-        />
-      </Tabs>
-      {tab === 0 && (
-        <SelectFacultySection hidden={tab !== 0}>
-          <SearchBar
-            placeholder={`Search in ${faculty.count} faculties...`}
-            value={facultySearch}
-            onChange={(e) => setFacultySearch(e.target.value)}
-            onSearch={handleFacultySearch}
-            showClear={faculty.isSearch}
-            onClear={handleClear}
-            style={{ marginBottom: "0.5em" }}
+      {selectedSlot === null || (selectedSlot !== null && form.faculty.id === null) ?
+        facultySection :
+        <CurrentFaculty>
+          <img
+            src={"http://localhost:8000/media/profile_images/FACULTY/thumbnail/thumbnail_2a95e451-319c-4c1c-b944-8fe53ac76ecb.jpg"}
+            alt="Faculty profile image"
+            height="32px"
           />
-
-          {faculty.results.length === 0 && (
-            <span className="highlight">No Faculties Found!</span>
-          )}
-
-          <FacultyCardContainer>
-            {faculty.results.map((item, count) => {
-              const { id, name, image, status, index } = item;
-
-              return (
-                <FacultyCard
-                  id={id}
-                  index={index}
-                  facultyName={name}
-                  imgURL={sampleData[count].img}
-                  status={status}
-                  checked={id === form.facultyChoice}
-                  onClick={() => handleFacultySelect(id)}
-                  loading={faculty.loading}
-                />
-              );
-            })}
-          </FacultyCardContainer>
-
-          <ModifiedPaginationButton
-            onPrev={() => handlePagination(faculty.previous, faculty.isSearch)}
-            disablePrev={faculty.previous === null}
-            onNext={() => handlePagination(faculty.next, faculty.isSearch)}
-            disableNext={faculty.next === null}
-          />
-        </SelectFacultySection>
-      )}
-
-      {tab === 1 && (
-        <InviteFacultySection>
-          <TextField
-            value={invite.name}
-            onChange={(e) => setInvite({ ...invite, name: e.target.value })}
-            id="outlined-basic"
-            label="Faculty Name"
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle
-                    style={{ color: "#b6244f" }}
-                    color="secondary"
-                  />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            value={invite.email}
-            onChange={(e) => setInvite({ ...invite, email: e.target.value })}
-            id="outlined-basic"
-            label="Email (Optional)"
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon style={{ color: "#b6244f" }} color="secondary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <Dim>Note:An Email Invite would be sent, if its provided.</Dim>
-
-          <Button
-            id="addFacultyButton"
-            variant="contained"
-            color="primary"
-            onClick={handleInvite}>
-            <i className="fas fa-user-plus"></i>
-            <span>Add Faculty</span>
-          </Button>
-        </InviteFacultySection>
-      )}
+          <Tooltip maxLength={15}>
+            <span>{form.faculty.name || ''}</span>
+          </Tooltip>
+          <button onClick={handleClearFaculty}>Change</button>
+        </CurrentFaculty>}
 
       <Divider />
-
       <Button id="createclassbtn" variant="contained" onClick={handleSave}>
-        <i className="fas fa-plus-square"></i>
-        <span className="label">CREATE CLASS</span>
+        {selectedSlot === null ?
+          <>
+            <i className="fas fa-plus-square"></i>
+            <span className="label">CREATE SLOT</span>
+          </> :
+          <>
+            <i class="fas fa-edit"></i>
+            <span className="label">UPDATE SLOT</span>
+          </>
+        }
       </Button>
     </ManageSlotContainer>
   );
 }
 
-export default ManageSlots;
+export default React.memo(ManageSlots);

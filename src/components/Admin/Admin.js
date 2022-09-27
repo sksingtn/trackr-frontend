@@ -4,45 +4,41 @@ import Sidebar, { SidebarLink } from "../Sidebar/Sidebar";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import AdminManage from "../AdminManage/AdminManage";
 import Notification from "../Notification/Notification";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 function Admin() {
   return (
     <AppContainer>
       <Sidebar>
         <SidebarLink
-          to="/dashboard"
+          to="/admin/dashboard"
           icon={<i className="fas fa-chart-area" />}
           text="Dashboard"
         />
         <SidebarLink
-          to="/manage"
+          to="/admin/manage"
           icon={<i className="fas fa-cog" />}
           text="Manage"
         />
         <SidebarLink
-          to="/activity"
+          to="/admin/activity"
           icon={<i class="fas fa-bullhorn" />}
           text="Activity"
         />
         <SidebarLink
-          to="/profile"
+          to="/admin/profile"
           icon={<i class="fas fa-address-card" />}
           text="Profile"
         />
       </Sidebar>
 
-      <Switch>
-        <Route exact path="/dashboard">
-          <AdminDashboard />
-        </Route>
-        <Route path="/manage">
-          <AdminManage />
-        </Route>
-        <Route path="/activity">
-          <Notification />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="manage" element={<AdminManage />} />
+        <Route path="activity" element={<Notification />} />
+        <Route path="*" element={<h1>404 not found</h1>} />
+      </Routes>
+
     </AppContainer>
   );
 }
