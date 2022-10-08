@@ -1,7 +1,7 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
-import { Routes, Route } from "react-router-dom";
 
 import { MainContainer } from "./components/Containers/Containers";
 import Home from "./components/Home/Home"
@@ -11,6 +11,7 @@ import FacultySignup from "./components/Signup/FacultySignup";
 import StudentSignup from "./components/Signup/StudentSignup";
 import Admin from "./components/Admin/Admin";
 import Faculty from "./components/Faculty/Faculty";
+import Student from "./components/Student/Student";
 import ProtectedRoute from "./components/Utils/ProtectedRoute/ProtectedRoute";
 import PublicRoutes from "./components/Utils/PublicRoutes/PublicRoutes";
 import { ADMIN_ROLE, FACULTY_ROLE, STUDENT_ROLE } from "./components/constants";
@@ -45,6 +46,11 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRole={FACULTY_ROLE} />}>
           <Route path="faculty/*" element={<MainContainer><Faculty />
+          </MainContainer>} />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRole={STUDENT_ROLE} />}>
+          <Route path="student/*" element={<MainContainer><Student />
           </MainContainer>} />
         </Route>
       </Routes>

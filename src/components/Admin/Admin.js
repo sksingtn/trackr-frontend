@@ -1,10 +1,14 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
+
 import { AppContainer } from "../Containers/Containers";
 import Sidebar, { SidebarLink } from "../Sidebar/Sidebar";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import AdminManage from "../AdminManage/AdminManage";
 import Notification from "../Notification/Notification";
-import { Routes, Route } from "react-router-dom";
+import Student from "../AdminManage/Student";
+import Faculty from "../AdminManage/Faculty";
+import Batch from "../AdminManage/Batch";
 
 function Admin() {
   return (
@@ -34,7 +38,12 @@ function Admin() {
 
       <Routes>
         <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="manage" element={<AdminManage />} />
+        <Route path="manage" element={<AdminManage />}>
+          <Route index element={<Student />} />
+          <Route path="student" element={<Student />} />
+          <Route path="faculty" element={<Faculty />} />
+          <Route path="batch" element={<Batch />} />
+        </Route>
         <Route path="activity" element={<Notification />} />
         <Route path="*" element={<h1>404 not found</h1>} />
       </Routes>

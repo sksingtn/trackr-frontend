@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import TimeCard from "./TimeCard";
-import ProgressBar from "./Progress";
 import RemoveIcon from "@material-ui/icons/Remove";
+
+import ProgressBar from "./Progress";
+import TimeCard from "./TimeCard";
 
 const OngoingClassContainer = styled.div`
   width: 100%;
@@ -27,58 +28,60 @@ const OngoingClassContainer = styled.div`
   }
 `;
 
-function OngoingClass(props) {
-  //TODO: A popup should appear on 100% completion.
-  const {
-    elapsedSeconds: elapsedSecondsProp,
-    totalSeconds: totalSecondsProp,
-    reset,
-  } = props;
+function OngoingClass({ slot, loading, reset }) {
+
+  const { title, startTime, endTime, totalSeconds,
+    secondary, elapsedSeconds: elapsedSecondsInitial } = slot || {}
   const [elapsedSeconds, setElapsedSeconds] = useState(null);
 
-  let percentage = null;
-  if (elapsedSeconds) {
-    percentage = ((elapsedSeconds / totalSecondsProp) * 100).toFixed(2);
-  }
-
-  console.log(percentage);
+  const timer = () =>
+    setElapsedSeconds((elapsed) => {
+      if (elapsed < totalSeconds) {
+        return elapsed + 1;
+      } else {
+        return elapsed;
+      }
+    })
 
   useEffect(() => {
-    if (elapsedSeconds === totalSecondsProp) {
-      reset("Ongoing");
+    if (elapsedSeconds !== null && elapsedSeconds === totalSeconds) {
+      setTimeout(reset, 1200)
     }
   }, [elapsedSeconds]);
 
   useEffect(() => {
-    setElapsedSeconds(elapsedSecondsProp);
-
-    const interval = setInterval(
-      () =>
-        setElapsedSeconds((elapsed) => {
-          if (elapsed < totalSecondsProp) {
-            return elapsed + 1;
-          } else {
-            clearInterval(interval);
-            return elapsed;
-          }
-        }),
-      1000
-    );
-
+    let interval = null;
+    if (slot !== null) {
+      setElapsedSeconds(elapsedSecondsInitial)
+      interval = setInterval(timer, 1000);
+    }
     return () => clearInterval(interval);
-  }, [elapsedSecondsProp]);
+  }, [elapsedSecondsInitial]);
+
+  if (loading) {
+    return <TimeCard footer="Ongoing class" loading={true} />
+  }
+
+  if (!loading && slot === null) {
+    return <TimeCard footer="Ongoing class" empty={true} />
+  }
+
+  let percentage = null;
+  if (elapsedSeconds) {
+    percentage = ((elapsedSeconds / totalSeconds) * 100).toFixed(2);
+  }
 
   return (
     <TimeCard
-      primary="Distributed System"
-      secondary="CSE 3rd Year (45 Students)"
+      primary={title}
+      secondary={secondary}
       footer="Ongoing class"
-      loading={elapsedSecondsProp === null ? true : false}>
+      loading={loading}>
       <OngoingClassContainer>
         <div>
-          <span>20:05</span>
+          <span>{startTime}</span>
           <RemoveIcon />
-          <span>21:30</span>
+          <span>{endTime}</span>
         </div>
 
         <ProgressBar percentage={percentage} />

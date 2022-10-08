@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Student from "./Student";
-import Faculty from "./Faculty";
-import Batch from "./Batch";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { SquareTabs, Tab } from "../../baseUI/SquareTabs";
+
+const SimpleLink = styled(Link)`
+text-decoration: none;
+`
 
 const ManageContainer = styled.div`
   width: 80%;
@@ -24,49 +26,50 @@ const Heading = styled.h1`
   color: #253858;
 `;
 
-const getSection = (identifier) => {
-  switch (identifier) {
-    case 1:
-      return <Student />;
-    case 2:
-      return <Faculty />;
-    case 3:
-      return <Batch />;
-    default:
-      return <h1>Wrong section!</h1>;
-  }
-};
+
 
 function AdminManage() {
-  const [section, setSection] = useState(1);
 
-  const sectionMap = { 1: "Student", 2: "Faculty", 3: "Batch" };
+  const location = useLocation();
+
+  let childPage = location.pathname.split("/")[3]
+  if (childPage === undefined) {
+    childPage = "Student"
+  }
+  else {
+    childPage = childPage[0].toUpperCase() + childPage.substring(1)
+  }
+
   return (
     <ManageContainer>
       <HeaderContainer>
-        <Heading>{`Manage ${sectionMap[section]}`}</Heading>
+        <Heading>{`Manage ${childPage}`}</Heading>
         <SquareTabs>
-          <Tab
-            text="Student"
-            iconName="fas fa-user-graduate"
-            checked={section === 1}
-            onClick={() => setSection(1)}
-          />
-          <Tab
-            text="Faculty"
-            iconName="fas fa-chalkboard-teacher"
-            checked={section === 2}
-            onClick={() => setSection(2)}
-          />
-          <Tab
-            text="Batch"
-            iconName="fas fa-users"
-            checked={section === 3}
-            onClick={() => setSection(3)}
-          />
+          <SimpleLink to="student">
+            <Tab
+              text="Student"
+              iconName="fas fa-user-graduate"
+              checked={childPage === "Student"}
+            />
+          </SimpleLink>
+          <SimpleLink to="faculty" >
+            <Tab
+              text="Faculty"
+              iconName="fas fa-chalkboard-teacher"
+              checked={childPage === "Faculty"}
+            />
+          </SimpleLink>
+
+          <SimpleLink to="batch" >
+            <Tab
+              text="Batch"
+              iconName="fas fa-users"
+              checked={childPage === "Batch"}
+            />
+          </SimpleLink>
         </SquareTabs>
       </HeaderContainer>
-      {getSection(section)}
+      <Outlet />
     </ManageContainer>
   );
 }

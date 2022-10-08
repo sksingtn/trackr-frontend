@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { ADMIN_ROLE, FACULTY_ROLE, STUDENT_ROLE } from "../constants";
+import { setToastSuccess } from "../Utils/Toast/toastSlice";
 import axiosInstance from '../axios';
 import { COMMON_LOGIN } from '../urls';
 
@@ -59,6 +60,7 @@ export const logInUser = (payload) => {
             const VALID_ROLES = [ADMIN_ROLE, FACULTY_ROLE, STUDENT_ROLE]
             if ((token && token.length > 0) && VALID_ROLES.includes(role)) {
                 dispatch(userLoggedIn(response.data.data))
+                dispatch(setToastSuccess("User Logged in Successfully!"))
             }
             else {
                 dispatch(setError("Something went wrong!"))

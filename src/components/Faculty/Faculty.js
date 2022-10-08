@@ -3,7 +3,7 @@ import { AppContainer } from "../Containers/Containers";
 import Sidebar, { SidebarLink } from "../Sidebar/Sidebar";
 import { Routes, Route } from "react-router-dom";
 import Notification from "../Notification/Notification";
-import FacultyDashboard from "../FacultyDashboard/FacultyDashboard";
+import CommonDashboard from "../FacultyStudentDashboard/FacultyStudentDashboard";
 
 function Faculty() {
   return (
@@ -27,7 +27,7 @@ function Faculty() {
       </Sidebar>
 
       <Routes>
-        <Route path="dashboard" element={<FacultyDashboard />} />
+        <Route path="dashboard" element={<CommonDashboard />} />
         <Route path="activity" element={<Notification />} />
         <Route path="profile" element={<h1>Profile</h1>} />
         <Route path="*" element={<h1>404 not found</h1>} />

@@ -50,7 +50,7 @@ const ToggleContainer = styled.label`
   }
 `;
 
-function Toggle({ className, style, checked, text }) {
+function Toggle({ className, style, checked, text, onClick }) {
   //TODO: Decide how to keep input id unique
 
   const onText = text?.on || "";
@@ -63,7 +63,7 @@ function Toggle({ className, style, checked, text }) {
       onText={onText}
       offText={offText}
       htmlFor="toggle">
-      <input type="checkbox" id="toggle" checked={checked} />
+      <input type="checkbox" id="toggle" checked={checked} onClick={onClick} />
       <div className="realCheckbox"></div>
     </ToggleContainer>
   );

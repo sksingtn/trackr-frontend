@@ -1,17 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+import {
+    ADMIN_LIST_BATCH, adminBatchRetriveUrl,
+    adminBatchStatusToggle
+} from "../urls"
+import { setToastSuccess, setToastError } from "../Utils/Toast/toastSlice"
+import { IDLE_STATE, PENDING_STATE, FETCHED_STATE } from "../constants";
 import axiosInstance from "../axios"
-import { ADMIN_LIST_BATCH, adminBatchRetriveUrl } from "../urls"
 
 
 const initialState = {
     batchList: [],
     selectedBatch: null,
-    batchListStatus: 'idle',
+    batchListStatus: IDLE_STATE,
     batchDetail: {},
     batchDetailLoading: false,
     selectedSlot: null
-
 }
 
 const adminDashboardSlice = createSlice({
@@ -19,7 +23,7 @@ const adminDashboardSlice = createSlice({
     initialState,
     reducers: {
         setBatchLoading: (state) => {
-            state.batchListStatus = 'pending'
+            state.batchListStatus = PENDING_STATE
         },
         setBatchDetailLoading: (state) => {
             state.batchDetailLoading = true
@@ -30,7 +34,7 @@ const adminDashboardSlice = createSlice({
                 state.selectedBatch = batchList[0]
             }
             state.batchList = batchList
-            state.batchListStatus = 'fetched'
+            state.batchListStatus = FETCHED_STATE
         },
         loadBatchDetail: (state, action) => {
             const { batch, data } = action.payload
@@ -62,7 +66,7 @@ const adminDashboardSlice = createSlice({
             const currentBatch = state.batchDetail[batch].weekdayData
             const currentWeekday = slot.weekday
             let previousWeekday = null
-            //To find previous weekday in case weekday has been updated
+            //To find previous weekday in case weekday has been changed.
             for (let item of currentBatch) {
                 const weekday = item.weekday
                 const slotArray = item.data.map(slot => slot.id)
@@ -71,14 +75,14 @@ const adminDashboardSlice = createSlice({
                     break
                 }
             }
-            //If weekday hasn't been changed then simply overwrite the slot with updated details
+            //If weekday hasn't been changed then simply overwrite the slot with updated details.
             if (currentWeekday === previousWeekday) {
                 let targetWeekday = currentBatch.find(item => item.weekday === currentWeekday).data
                 const slotIndex = targetWeekday.findIndex(slot => slot.id === slotId)
                 targetWeekday[slotIndex] = slot
             }
             //If weekday has been changed, then remove slot from old weekday array and  
-            //add a new slot to new weekday array
+            //add a new slot to new weekday array.
             else {
                 let targetWeekday = currentBatch.find(item => item.weekday === previousWeekday).data
                 const slotIndex = targetWeekday.findIndex(slot => slot.id === slotId)
@@ -93,6 +97,13 @@ const adminDashboardSlice = createSlice({
         },
         resetSelectedSlot: (state) => {
             state.selectedSlot = null
+        },
+        setBatchStatus: (state, action) => {
+            const { batch, status } = action.payload;
+            state.batchDetail[batch].isActive = status
+        },
+        resetAll: (state) => {
+            return initialState
         }
     }
 })
@@ -112,6 +123,24 @@ export const getBatchDetail = (batchId) => {
         dispatch(setBatchDetailLoading())
         const response = await axiosInstance.get(adminBatchRetriveUrl(batchId))
         dispatch(loadBatchDetail({ batch: batchId, data: response.data.data }))
+    }
+}
+
+export const updateBatchStatus = (batchId) => {
+
+    return async (dispatch, getState) => {
+        const response = await axiosInstance.put(adminBatchStatusToggle(batchId))
+        const status = response.data?.data
+
+        if (typeof status === 'boolean') {
+            dispatch(setBatchStatus({ batch: batchId, status }))
+            let message = status ? "Batch is now active & visible to student & faculties!"
+                : "Batch is now inactive & hidden from student & faculties!"
+            dispatch(setToastSuccess(message))
+        } else {
+            dispatch(setToastError("Something went wrong!"))
+        }
+
     }
 }
 
@@ -137,4 +166,4 @@ export const selectDetailedBatch = (state) => {
 
 export const { setBatchLoading, loadBatchList, setSelectedBatch,
     setBatchDetailLoading, loadBatchDetail, setSlot, removeSlot,
-    setSelectedSlot, resetSelectedSlot, updateSlot } = adminDashboardSlice.actions;
+    setSelectedSlot, resetSelectedSlot, updateSlot, setBatchStatus, resetAll } = adminDashboardSlice.actions;

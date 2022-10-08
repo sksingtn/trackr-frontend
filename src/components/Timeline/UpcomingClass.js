@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+
 import TimeCard from "./TimeCard";
 
 const UpcomingClassContainer = styled.div`
@@ -41,44 +42,56 @@ const convertTime = (totalSeconds) => {
   return [hours, minutes, seconds];
 };
 
-function UpcomingClass({ startsIn, reset }) {
-  //TODO: A popup should appear on completion of timer.
-  const [totalSeconds, setTotalSeconds] = useState(null);
+function UpcomingClass({ slot, reset, loading }) {
 
-  const [hours, minutes, seconds] = convertTime(totalSeconds);
+  const { title, weekday, secondary,
+    startsInSeconds: startsInSecondsInitial } = slot || {}
+  const [startsInSeconds, setStartsInSeconds] = useState(null);
+
+  const [hours, minutes, seconds] = convertTime(startsInSeconds);
+
+  const timer = () =>
+    setStartsInSeconds((prev) => {
+      if (prev > 0) {
+        return prev - 1;
+      } else {
+        return 0;
+      }
+    })
 
   useEffect(() => {
-    if (totalSeconds === 0) {
-      reset("Upcomng");
+
+    if (startsInSeconds === 0 && reset !== null) {
+      setTimeout(reset, 1200)
     }
-  }, [totalSeconds]);
+  }, [startsInSeconds]);
 
   useEffect(() => {
-    setTotalSeconds(startsIn);
-
-    const interval = setInterval(
-      () =>
-        setTotalSeconds((prev) => {
-          if (prev > 0) {
-            return prev - 1;
-          } else {
-            clearInterval(interval);
-            return prev;
-          }
-        }),
-      1000
-    );
-
+    let interval = null;
+    if (slot !== null) {
+      setStartsInSeconds(startsInSecondsInitial)
+      interval = setInterval(timer, 1000);
+    }
     return () => clearInterval(interval);
-  }, [startsIn]);
+  }, [startsInSecondsInitial]);
+
+
+  if (loading) {
+    return <TimeCard footer="Upcoming class" color="#F24333" loading={true} />
+  }
+
+  if (!loading && slot === null) {
+    return <TimeCard footer="Upcoming class" color="#F24333" empty={true} />
+  }
 
   return (
     <TimeCard
-      primary="Machine Learning"
-      secondary="CSE 4th Year (60 Students)"
+      primary={title}
+      secondary={secondary}
       footer="Upcoming class"
       color="#F24333"
-      loading={totalSeconds === null ? true : false}>
+      weekday={weekday}
+      loading={loading}>
       <UpcomingClassContainer>
         <span>
           {hours}:{minutes}:{seconds}

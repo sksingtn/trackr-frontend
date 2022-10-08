@@ -14,3 +14,5 @@ export const USER_MAPPING = {
 export const IDLE_STATE = 'idle';
 export const PENDING_STATE = 'pending';
 export const FETCHED_STATE = 'fetched';
+
+export const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', "Sunday"];

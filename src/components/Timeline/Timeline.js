@@ -5,7 +5,8 @@ import UpcomingClass from "./UpcomingClass";
 import OngoingClass from "./OngoingClass";
 import PreviousClass from "./PreviousClass";
 
-const TimelineContainer = styled.div`
+
+const TimelineContainerElement = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
@@ -16,24 +17,54 @@ const TimelineContainer = styled.div`
   }
 `;
 
-function Timeline({ style }) {
-  //TODO: Make sure api is not called twice if ongoing-upcoming class has no gap
-  const [start, setStart] = React.useState(50);
+function TimelineContainer(props) {
+  const { style, loading, children } = props
 
-  const getData = async (caller = null) => {
-    if (start !== null) {
-      setStart(null);
-      await new Promise((r) => setTimeout(r, 2000));
-      let newValue = Math.floor(Math.random() * 100);
-      setStart(newValue);
+  return <TimelineContainerElement style={style}>
+    {children.map(elem => React.cloneElement(elem, { ...elem.props, loading }))}
+  </TimelineContainerElement>
+}
+
+
+function Timeline({ style, timelineData, loading, reset }) {
+
+  let [previousSlot, ongoingSlot, nextSlot] = [null, null, null];
+
+  //Adding a common field to accomodate faculty & student perspective.
+  if (timelineData !== null) {
+    for (let key in timelineData) {
+      if (timelineData.hasOwnProperty(key)) {
+        let slot = timelineData[key];
+        if (slot !== null) {
+          slot.secondary = slot.batch || `By ${slot.facultyName}`
+        }
+      }
     }
-  };
+
+    previousSlot = timelineData.previousSlot
+    ongoingSlot = timelineData.ongoingSlot
+    nextSlot = timelineData.nextSlot
+  }
+
+
+  //Making sure that api is not called twice if ongoing-upcoming class has no gap.
+  let isEdgeCase = false;
+
+  if (ongoingSlot !== null && nextSlot !== null) {
+    const { totalSeconds, elapsedSeconds } = ongoingSlot;
+    const { startsInSeconds } = nextSlot;
+
+    if ((totalSeconds - elapsedSeconds - 1) === startsInSeconds) {
+      isEdgeCase = true;
+    }
+  }
+
 
   return (
-    <TimelineContainer style={style}>
-      <PreviousClass />
-      <OngoingClass elapsedSeconds={start} totalSeconds={100} reset={getData} />
-      <UpcomingClass startsIn={start} reset={getData} />
+    <TimelineContainer style={style} loading={loading}>
+      <PreviousClass slot={previousSlot} />
+      <OngoingClass slot={ongoingSlot} reset={reset} />
+      <UpcomingClass slot={nextSlot} reset={isEdgeCase ? null : reset} />
     </TimelineContainer>
   );
 }

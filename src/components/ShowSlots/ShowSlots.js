@@ -1,8 +1,9 @@
 import React, { Fragment, useState, useEffect } from "react";
-
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { useSwipeable } from "react-swipeable";
 import { useDispatch } from "react-redux";
+import EditIcon from "@material-ui/icons/Edit";
 
 import {
   MainContainer,
@@ -13,7 +14,6 @@ import {
   Slot,
 } from "./style";
 import Dim from "../../baseUI/Dim";
-import EditIcon from "@material-ui/icons/Edit";
 import RoundedIconButton from "../../baseUI/RoundedIconButton";
 import SearchBar from "../../baseUI/SearchBar";
 import Tooltip from "../Utils/Tooltip/Tooltip";
@@ -21,17 +21,34 @@ import { adminSlotRetriveUpdateDeleteUrl } from '../urls';
 import axiosInstance from "../axios";
 import { setToastSuccess, setToastError } from "../Utils/Toast/toastSlice";
 import { removeSlot, setSelectedSlot } from '../AdminDashboard/adminDashboardSlice'
+import { WEEKDAYS } from '../constants';
 
-//TODO: Animate additon/deletion of slots
+
 
 //Used to output individual week
-function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch }) {
+function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch, readOnly, loading }) {
 
   const dispatch = useDispatch();
 
+  //Sorts slot on the basis of start time.
   const timeSort = (a, b) => {
-    const t1 = new Date('0000-01-01 ' + a.startTime.substring(0, 5));
-    const t2 = new Date('0000-01-01 ' + b.startTime.substring(0, 5));
+
+    const getDate = (slot) => {
+      let hours = parseInt(slot.startTime.substring(0, 2))
+      const minutes = parseInt(slot.startTime.substring(3, 5))
+      const identifier = slot.startTime.substring(5, 7)
+
+      if (hours === 12 && identifier === "AM") {
+        hours = 0
+      }
+      else if (hours < 12 && identifier === "PM") {
+        hours += 12
+      }
+
+      return new Date(1999, 0, 1, hours, minutes)
+    }
+    const t1 = getDate(a);
+    const t2 = getDate(b);
 
     if (t1 < t2) {
       return -1
@@ -41,7 +58,6 @@ function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch }) {
     }
   }
 
-  const sortedSlots = slotData.slice().sort(timeSort)
 
   const handleSlotDelete = async (slotId, weekday, batch) => {
     if (slotId === selectedSlot) {
@@ -64,6 +80,32 @@ function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch }) {
     }
   }
 
+  //Show 3 skeleton slots in loading state .
+  if (loading) {
+    return (
+      <WeekdayContainer>
+        <div className="heading">
+          <span className="weekday-name">{day}</span>
+          <span className="count">0 Classes</span>
+        </div>
+        <SlotContainer>
+          {slotData.map((_, index) => {
+            return (
+              <Slot>
+                <span className="index">{index + 1}.</span>
+                <div className="box skeleton">
+                  {[null, null, null].map(_ =>
+                    <Skeleton animation="wave" width="100%" height="30%" />)}
+                </div>
+              </Slot>
+            )
+          })}
+        </SlotContainer>
+      </WeekdayContainer>)
+  }
+
+  const sortedSlots = slotData.slice().sort(timeSort)
+
   return (
     <WeekdayContainer highlight={highlight}>
       <div className="heading">
@@ -84,18 +126,18 @@ function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch }) {
             lastModified,
             duration,
             faculty,
+            batch,
             title,
             startTime,
             endTime,
           } = slot;
 
-          const { name: facultyName, image: facultyImage } = faculty;
 
           return (
-            <Slot key={id} selected={id === selectedSlot}>
+            <Slot key={id} selected={id === selectedSlot} readOnly={readOnly}>
               <span className="index">{index + 1}.</span>
 
-              <div className="content">
+              <div className="box content">
                 {/*Elements that disappear on hover*/}
                 <div className="topbar detailsbar">
                   <span className="duration">{duration}</span>
@@ -119,23 +161,27 @@ function Weekday({ day, slotData, highlight, selectedSlot, selectedBatch }) {
                 </Tooltip>
 
                 <div className="secondary">
-                  <div className="faculty">
-                    <span>By </span>
-                    <img src="https://images.unsplash.com/photo-1621349805296-d026d3d26d1f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
-                    <Tooltip maxLength={24}>
-                      <span>{facultyName}</span>
-                    </Tooltip>
-                  </div>
+                  {faculty &&
+                    <div className="faculty">
+                      <span>By </span>
+                      <img src="https://images.unsplash.com/photo-1621349805296-d026d3d26d1f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
+                      <Tooltip maxLength={24}>
+                        <span>{faculty.name}</span>
+                      </Tooltip>
+                    </div>}
 
-                  {/*<span className="batch">C.S.E 4th year</span>*/}
+                  {batch &&
+                    <Tooltip maxLength={24}>
+                      <span className="batch">{batch}</span>
+                    </Tooltip>}
                 </div>
 
                 <div className="timing">
                   <i className="fa fa-hourglass-start"></i>
                   <span className="time">
-                    {startTime.replace(" ", "")}
+                    {startTime}
                     <Dim>-</Dim>
-                    {endTime.replace(" ", "")}
+                    {endTime}
                   </span>
                 </div>
               </div>
@@ -161,7 +207,10 @@ function Highlight({ pre, content, post }) {
   );
 }
 
-function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot, selectedBatch }) {
+
+function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
+  selectedBatch, readOnly = false, loading = false }) {
+
   const config = {
     delta: 10,
     preventDefaultTouchmoveEvent: false,
@@ -169,7 +218,6 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
     trackMouse: false,
     rotationAngle: 0,
   };
-
 
   const handleLeft = (e) =>
     setCaraousel(
@@ -203,16 +251,33 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
     ...config,
   });
 
+
   //Direction attribute is needed to decide the animation direction for the caraousel.
-  const [caraousel, setCaraousel] = useState(() => {
-    //Keep the current weekday at the middle of carousel
-    let position = weekdayData.findIndex((item) => item.weekday === currentWeekday)
-    position = position === 0 ? weekdayData.length - 1 : position - 1
-    return {
-      position,
+  const [caraousel, setCaraousel] = useState({
+    position: 0,
+    direction: "",
+  });
+
+  const resetCarousel = () => {
+    //Keep the current weekday at the middle of carousel.
+    let caraouselState = {
+      position: 0,
       direction: "",
     }
-  });
+
+    if (currentWeekday && weekdayData) {
+      let position = weekdayData.findIndex((item) => item.weekday === currentWeekday)
+      position = position === 0 ? weekdayData.length - 1 : position - 1
+      caraouselState.position = position
+    }
+
+    setCaraousel(caraouselState)
+
+  }
+
+  useEffect(() => {
+    resetCarousel()
+  }, [currentWeekday])
 
   //For implementation of search with highlighted text feature.
   const defaultSearchState = {
@@ -252,17 +317,17 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
 
           for (let i = 0; i < weekday.data.length; i++) {
             let newWeekdayData = { ...weekday.data[i] };
-            const { title, faculty } = newWeekdayData;
-            const facultyName = faculty.name;
+            const { title, faculty, batch } = newWeekdayData;
+            const secondaryText = faculty ? faculty.name : batch;
 
             //Case insensitive match
             //newline to make sure match is independent between title & faculty
             if (
-              (title.toLowerCase() + "\n" + facultyName.toLowerCase()).includes(
+              (title.toLowerCase() + "\n" + secondaryText.toLowerCase()).includes(
                 searchedText.toLowerCase()
               )
             ) {
-              const changed = [title, facultyName].map((item) => {
+              const changed = [title, secondaryText].map((item) => {
                 const index = item
                   .toLowerCase()
                   .indexOf(searchedText.toLowerCase());
@@ -281,7 +346,12 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
               });
 
               newWeekdayData.title = changed[0];
-              newWeekdayData.faculty.name = changed[1];
+              if (faculty) {
+                newWeekdayData.faculty.name = changed[1];
+              }
+              else {
+                newWeekdayData.batch = changed[1];
+              }
               newData.push(newWeekdayData);
             }
           }
@@ -301,16 +371,29 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
     }
   };
 
+  const handleSearchClear = () => {
+    setSearch(defaultSearchState)
+    resetCarousel()
+  }
+
   //Pagination Logic for cicular caraousel navigation.
   const { position, direction } = caraousel;
   const weekdayPerPage = 3;
 
   //Decide whether to show all slots or search results. Incase of 0 matched slots, all slots are shown.
+  //In case of loading, show dummy skeleton slots.
   let target;
   if (getSearchDataLength() !== 0) {
     target = searchData;
   } else {
-    target = weekdayData;
+    if (loading) {
+      target = WEEKDAYS.map(weekday => {
+        return { weekday, data: [{}, {}, {}] }
+      })
+    }
+    else {
+      target = weekdayData;
+    }
   }
 
   //Slcing to show paginated data.
@@ -333,7 +416,7 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
         value={currentText}
         onChange={(e) => setSearch({ ...search, currentText: e.target.value })}
         onSearch={() => setSearch({ ...search, searchedText: currentText })}
-        onClear={() => setSearch(defaultSearchState)}
+        onClear={handleSearchClear}
         showClear={searchData !== null}
       />
 
@@ -356,7 +439,7 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
         </RoundedIconButton>
 
         <TransitionGroup component={null} exit={false}>
-          {pageData.map((item, index) => (
+          {pageData.map((item) => (
             <CSSTransition
               key={item.weekday}
               appear={true}
@@ -368,6 +451,8 @@ function ShowSlots({ style, clasName, weekdayData, currentWeekday, selectedSlot,
                 highlight={item.weekday === currentWeekday}
                 selectedSlot={selectedSlot}
                 selectedBatch={selectedBatch}
+                readOnly={readOnly}
+                loading={loading}
               />
             </CSSTransition>
           ))}

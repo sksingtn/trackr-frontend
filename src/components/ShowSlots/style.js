@@ -153,14 +153,24 @@ export const Slot = styled.div`
     align-self: start;
     color: #34386b;
   }
-
-  & > .content {
+  & > .box{
     width: 16.4em;
     height: 8.5em;
     border-radius: 10px;
-    padding: 2.2em 0.8em 0.6em 0.8em;
     box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
     background: rgba(255, 255, 255, 1);
+  }
+
+  & > .skeleton{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8em;
+  }
+
+  & > .content {
+    padding: 2.2em 0.8em 0.6em 0.8em;
     user-select: none;
     position: relative;
     overflow: hidden;
@@ -174,15 +184,19 @@ export const Slot = styled.div`
     &:hover {
       box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px #b6244f;
 
-      & > .managebar {
-        opacity: 1;
-        transform: translateX(0%);
-      }
+      ${(props) => !props.readOnly && css`
 
-      & > .detailsbar {
-        opacity: 0;
-        transform: translateX(-100%);
-      }
+          & > .managebar {
+            opacity: 1;
+            transform: translateX(0%);
+          }
+
+          & > .detailsbar {
+            opacity: 0;
+            transform: translateX(-100%);
+          }
+      `}
+      
     }
 
     & > .topbar {

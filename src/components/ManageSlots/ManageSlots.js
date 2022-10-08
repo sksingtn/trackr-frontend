@@ -239,8 +239,11 @@ function ManageSlots(props) {
 
   //TODO:Refactor
   const handleSave = async () => {
-    console.log(canSaveForm)
-    console.log(form)
+
+    if (!canSaveForm) {
+      dispatch(setToastError("Fill all the mandatory fields!"))
+    }
+
     if (canSaveForm && selectedSlot && selectedBatch) {
       try {
         const postData = {

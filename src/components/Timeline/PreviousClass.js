@@ -1,7 +1,8 @@
 import React from "react";
-import TimeCard from "./TimeCard";
 import RemoveIcon from "@material-ui/icons/Remove";
 import styled from "styled-components";
+
+import TimeCard from "./TimeCard";
 
 const PreviousClassContainer = styled.div`
   width: 100%;
@@ -20,7 +21,7 @@ const PreviousClassContainer = styled.div`
 
     & > * {
       font-family: "PT Mono", monospace;
-      color: orange;
+      color: #F24333;
     }
   }
 
@@ -29,25 +30,36 @@ const PreviousClassContainer = styled.div`
   }
 `;
 
-const getElapsed = (seconds) => {
-  return Math.floor(seconds / 60);
-};
 
-function PreviousClass() {
+function PreviousClass({ slot, loading }) {
+
+  if (loading) {
+    return <TimeCard footer="Previous class" color="#F24333" loading={true} />
+  }
+
+  if (!loading && slot === null) {
+    return <TimeCard footer="Previous class" color="#F24333" empty={true} />
+  }
+
+  const { title, startTime, endTime, weekday, secondary, passedSinceSeconds } = slot
+  const elapsedHours = Math.floor(passedSinceSeconds / 3600)
+
   return (
     <TimeCard
-      primary="Data Structures"
-      secondary="CSE 4th Year(60 Students)"
+      primary={title}
+      secondary={secondary}
       footer="Previous class"
-      color="orange">
+      color="#F24333"
+      weekday={weekday}
+      loading={loading}>
       <PreviousClassContainer>
         <div>
-          <span>20:05</span>
+          <span>{startTime}</span>
           <RemoveIcon />
-          <span>21:30</span>
+          <span>{endTime}</span>
         </div>
 
-        <span>Ended 2hrs ago</span>
+        <span>Ended {elapsedHours}hrs ago</span>
       </PreviousClassContainer>
     </TimeCard>
   );

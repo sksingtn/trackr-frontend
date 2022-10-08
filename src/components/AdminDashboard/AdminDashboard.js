@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { DashboardWrapper, BatchDetailsContainer, TopBar } from "./style";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { TextField } from "@material-ui/core";
+import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from "react-router-dom";
+
+import {
+  DashboardWrapper, BatchDetailsContainer,
+  MessageWrapper, TopBar
+} from "./style";
 import Toggle from "../../baseUI/Toggle";
 import BaseStats from "../Stats/Stats";
 import ShowSlots from "../ShowSlots/ShowSlots";
-import { data1, data2 } from "../../testData";
 import ManageSlots from "../ManageSlots/ManageSlots";
-import axiosInstance from "../axios";
 import {
   getBatchList, selectBatchList, selectCurrentBatch,
   setSelectedBatch, selectBatchListStatus, selectDetailedBatch,
   getBatchDetail, selectBatchDetailLoading, selectCurrentSlot,
-  resetSelectedSlot
+  resetSelectedSlot, updateBatchStatus, resetAll
 } from './adminDashboardSlice'
+import { PENDING_STATE, FETCHED_STATE } from "../constants";
 
 
-//TODO: Put a wrapper around showslots
-
-const TestData = data1;
 
 const Stats = styled(BaseStats)`
   margin-left: 4em;
@@ -39,29 +40,62 @@ function AdminDashboard() {
   const batchDetail = useSelector(selectDetailedBatch)
   const batchDetailLoading = useSelector(selectBatchDetailLoading)
 
-  //TODO: Reset relevant state when batch is switched
+
   useEffect(() => {
     dispatch(getBatchList())
+
+    return () => dispatch(resetAll())
   }, [])
 
   useEffect(() => {
     dispatch(resetSelectedSlot())
-    //If batch detail not in store then fetch it
+    //If batch detail not in store then fetch it.
     if (batchDetail === null && selectedBatch !== null) {
       dispatch(getBatchDetail(selectedBatch.id))
     }
   }, [selectedBatch])
 
-  if (batchListStatus === 'pending') {
-    return <h1>Loading...</h1>
+
+  if (batchListStatus === PENDING_STATE) {
+    return (
+      <MessageWrapper>
+        <CircularProgress />
+        <span className="info">Fetching Batch list . . .</span>
+      </MessageWrapper>)
   }
 
-  if (batchDetailLoading || batchDetail == null) {
-    return <h1>Batch Details Loading...</h1>
+  if (batchListStatus === FETCHED_STATE && batchList.length === 0) {
+    return (
+      <MessageWrapper>
+        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+        <span className="info">No Batch Found. Click&nbsp;
+          <Link to="/admin/manage/batch">
+            here
+          </Link>
+          &nbsp;to create.
+        </span>
+      </MessageWrapper>)
   }
 
-  if (batchListStatus === 'fetched' && batchList.length === 0) {
-    return <h1>No Batch Created Yet. Click here to create</h1>
+  const batchInLoading = batchDetailLoading || batchDetail === null
+
+  const handleBatchToggle = () => {
+    if (!batchInLoading) {
+      dispatch(updateBatchStatus(selectedBatch.id))
+    }
+  }
+
+  let showSlotsProps = null;
+  if (batchInLoading) {
+    showSlotsProps = { loading: true }
+  }
+  else {
+    showSlotsProps = {
+      weekdayData: batchDetail.weekdayData,
+      currentWeekday: batchDetail.currentWeekday,
+      selectedSlot: selectedSlot,
+      selectedBatch: selectedBatch?.id
+    }
   }
 
   return (
@@ -86,20 +120,19 @@ function AdminDashboard() {
               />
             )}
           />
-          <Toggle checked={batchDetail.isActive} text={{ on: "ACTIVE", off: "PAUSED" }} />
+          <Toggle checked={batchInLoading ? false : batchDetail.isActive}
+            onClick={handleBatchToggle}
+            text={{ on: "ACTIVE", off: "PAUSED" }} />
         </TopBar>
         <Stats
           info={{
-            totalStudents: batchDetail.totalStudents,
-            totalClasses: batchDetail.totalClasses,
-            totalFaculties: batchDetail.totalFaculties
+            totalStudents: batchInLoading ? 0 : batchDetail.totalStudents,
+            totalClasses: batchInLoading ? 0 : batchDetail.totalClasses,
+            totalFaculties: batchInLoading ? 0 : batchDetail.totalFaculties
           }}
         />
         <ShowSlots
-          weekdayData={batchDetail.weekdayData}
-          currentWeekday={batchDetail.currentWeekday}
-          selectedSlot={selectedSlot}
-          selectedBatch={selectedBatch?.id}
+          {...showSlotsProps}
         />
       </BatchDetailsContainer>
 
