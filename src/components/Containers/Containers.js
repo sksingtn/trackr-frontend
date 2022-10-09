@@ -16,7 +16,7 @@ export const AppContainer = styled.div`
   height: 95%;
   min-height: 850px;
 
-  background: whitesmoke;
+  background: white;
 
   border-radius: 20px;
   box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.73);
