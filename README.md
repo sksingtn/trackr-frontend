@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/d3a7818c253fcbafff9ebd1d4abb2866c192e1d7/svgs/solid/calendar-week.svg"  width="50" height="50"> 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend(ReactJS) repository for trackr.\
+For the backend(Django) repository, click [here](https://github.com/sksingtn/trackr-backend "here")
 
-## Available Scripts
+# Trackr
 
-In the project directory, you can run:
+Trackr is a SPA web application built with Django & ReactJS which can be used by faculty & students of any organisation to efficiently manage their classes in one place. Basically it can be used anywhere where a weekly routine is followed.
 
-### `npm start`
+Trackr provides the following 3 roles:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **ADMIN** - Admins can create and manage batches & the individual slots inside them as well as invite,manage & broadcast messages to their student & faculties.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- **FACULTY** - Faculties can track the weekly classes assigned to them to teach as well as get notified for the same if opted for.They can also broadcast messages to their students.
 
-### `npm test`
+- **STUDENT** -  Students can track the weekly classes assigned to them to attend as well as get notified for the same if opted for.They can also view messages from their faculty & admin.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+# Overview
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+ - **Admin Dashboard**  
+ 
+ [![admin-dashboard.png](https://i.imgur.com/OaVyj9r.png)](https://i.imgur.com/OaVyj9r.png)
+ 
+ Admins can create/update/delete slots in all the batches that were created by them. They can simply add a faculty profile
+ as a placeholder or they can link their email & invite them to create an account & track their classes.
+ 
+ Students can be invited via a invite link that is unique for every batch & accessible to admin. They can also control the 
+max size of the batch and pause the batch when needed.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Faculty & Student Dashboard**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ [![common-dashboard.png](https://i.imgur.com/gmhABT8.png)](https://i.imgur.com/gmhABT8.png)
 
-### `npm run eject`
+ Students & Faculties can quickly see their upcoming, ongoing & previous classes. Rest of the classes are grouped by weekday
+ and are visible in the caraousel.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+ # Built with
+ - ReactJS
+ - Redux Toolkit
+ - Material UI
+ - Styled Components
+ - Django
+ - Django Rest Framework
+ - Redis (notification for upcoming classes)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
